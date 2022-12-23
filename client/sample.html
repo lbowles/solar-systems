@@ -12,14 +12,7 @@
       function getOrbitSVG(canvasWidth, planetRadius, orbitRadius, color, duration) {
         const halfCanvasWidth = canvasWidth / 2
         return `
-        <path 
-          d="M ${halfCanvasWidth} ${halfCanvasWidth} m ${-orbitRadius}, 0 a ${orbitRadius},${orbitRadius} 0 1,0 ${
-          orbitRadius * 2
-        },0 a ${orbitRadius},${orbitRadius} 0 1,0 ${-orbitRadius * 2},0" 
-          stroke="${color}" 
-          stroke-width="1" 
-          fill="none">
-        </path>
+        <circle cx="${halfCanvasWidth}" cy="${halfCanvasWidth}" r="${orbitRadius}" fill="none" stroke="${color}"></circle>
         <circle 
           cx="${halfCanvasWidth + orbitRadius}" 
           cy="${halfCanvasWidth}" 
