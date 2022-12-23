@@ -114,6 +114,8 @@ function App() {
   }
 
   generatePlanet()
+  let ran = Math.round(getRandomNumber(120323, 1203123032))
+  console.log(ran + '----' + ((ran % 50) + 200))
 
   return (
     <div className="App">
