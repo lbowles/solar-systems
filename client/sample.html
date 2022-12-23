@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Solar System SVG</title>
+  </head>
+  <body>
+    <div id="canvasContainer"></div>
+    <script>
+      function getOrbitSVG(canvasWidth, planetRadius, orbitRadius, color, duration) {
+        const halfCanvasWidth = canvasWidth / 2
+        return `
+        <path 
+          d="M ${halfCanvasWidth} ${halfCanvasWidth} m ${-orbitRadius}, 0 a ${orbitRadius},${orbitRadius} 0 1,0 ${
+          orbitRadius * 2
+        },0 a ${orbitRadius},${orbitRadius} 0 1,0 ${-orbitRadius * 2},0" 
+          stroke="${color}" 
+          stroke-width="1" 
+          fill="none">
+        </path>
+        <circle 
+          cx="${halfCanvasWidth + orbitRadius}" 
+          cy="${halfCanvasWidth}" 
+          r="${planetRadius}" 
+          fill="${color}"
+        >
+          <animateTransform 
+            attributeName="transform" 
+            type="rotate" 
+            from="0 ${halfCanvasWidth} ${halfCanvasWidth}" 
+            to="360 ${halfCanvasWidth} ${halfCanvasWidth}" 
+            dur="${duration}" 
+            repeatCount="indefinite">
+          </animateTransform>
+        </circle>
+        `
+      }
+
+      function getSVG(canvasWidth) {
+        const planets = []
+        const numPlanets = Math.floor(Math.random() * 8) + 1
+        const radiusInterval = canvasWidth / 2 / (numPlanets + 3)
+        const planetRadiusUpperBound = Math.min(radiusInterval / 2, canvasWidth / 4)
+        const planetRadiusLowerBound = radiusInterval / 4
+
+        // Generate random planets
+        for (let i = 0; i < numPlanets; i++) {
+          planets.push({
+            color: `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`,
+            radius: Math.random() * (planetRadiusUpperBound - planetRadiusLowerBound) + planetRadiusLowerBound,
+            orbitRadius: radiusInterval * (i + 3),
+            duration: Math.random() * 10 + 5,
+          })
+        }
+
+        // Random number between radiusInterval and radiusInterval + 10
+        const sunRadius = Math.random() * 10 + radiusInterval
+
+        return `
+        <svg 
+          width="${canvasWidth}" 
+          height="${canvasWidth}" 
+          viewBox="0 0 ${canvasWidth} ${canvasWidth}" 
+          xmlns="http://www.w3.org/2000/svg"
+        >
+        <rect width="${canvasWidth}" height="${canvasWidth}" fill="#0D1F2F"> </rect>
+        <circle cx="${canvasWidth / 2}" cy="${canvasWidth / 2}" r="${sunRadius}" fill="#FFDA17"></circle>
+          ${planets
+            .map((planet) => getOrbitSVG(canvasWidth, planet.radius, planet.orbitRadius, planet.color, planet.duration))
+            .join("")}
+        </svg>
+        `
+      }
+
+      // Clear the canvas container
+      document.getElementById("canvasContainer").innerHTML = ""
+
+      // Create 10 canvas elements
+      for (let i = 0; i < 10; i++) {
+        const planets = []
+        const canvas = document.createElement("div")
+        canvas.innerHTML = getSVG(500)
+        document.getElementById("canvasContainer").appendChild(canvas)
+      }
+    </script>
+  </body>
+</html>
