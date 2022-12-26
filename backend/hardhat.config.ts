@@ -25,16 +25,25 @@ if (process.env.FORK) {
     hardhatNetwork = {
       chainId: 1,
       forking: {
-        url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`
-      }
+        url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      },
     }
   }
 }
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.0",
+  solidity: {
+    compilers: [
+      {
+        version: "0.8.12",
+      },
+      {
+        version: "0.8.0",
+      },
+    ],
+  },
   networks: {
-    hardhat: hardhatNetwork
+    hardhat: hardhatNetwork,
   },
   typechain: {
     outDir: "types",
@@ -43,8 +52,8 @@ const config: HardhatUserConfig = {
   namedAccounts: {
     deployer: {
       default: 0,
-    }
-  }
+    },
+  },
 }
 
 export default config

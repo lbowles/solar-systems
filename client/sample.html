@@ -73,6 +73,7 @@
           style="background:#0D1F2F"
           xmlns="http://www.w3.org/2000/svg"
         >
+        <rect width="${canvasWidth * 2}" height="${canvasWidth * 2}" fill="#0D1F2F"></rect>
         <circle cx="${canvasWidth / 2}" cy="${canvasWidth / 2}" r="${sunRadius}" fill="#FFDA17"></circle>
           ${planets
             .map((planet) => getOrbitSVG(canvasWidth, planet.radius, planet.orbitRadius, planet.color, planet.duration))
