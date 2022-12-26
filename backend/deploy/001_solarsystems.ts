@@ -1,5 +1,6 @@
 import { HardhatRuntimeEnvironment } from "hardhat/types"
 import { DeployFunction } from "hardhat-deploy/types"
+import { ethers } from "hardhat"
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre
@@ -27,6 +28,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       Trigonometry: trigonometryLibrary.address,
       Renderer: rendererLibrary.address,
     },
+    args: [ethers.utils.parseEther("0.01")],
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
   })
 }
