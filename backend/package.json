@@ -32,7 +32,7 @@
     "xmldom": "^0.6.0"
   },
   "scripts": {
-    "start": "node live-view/index.js",
+    "live": "node live-view/index.js",
     "qa": "node live-view/qa.js"
   }
 }
