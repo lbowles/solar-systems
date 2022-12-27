@@ -28,7 +28,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       Trigonometry: trigonometryLibrary.address,
       Renderer: rendererLibrary.address,
     },
-    args: [ethers.utils.parseEther("0.01")],
+    args: [ethers.utils.parseEther("0.01"), 1000],
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
   })
 }

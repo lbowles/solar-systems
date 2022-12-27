@@ -12,11 +12,12 @@ contract SolarSystems is ERC721A, Ownable {
   // The price of each NFT in wei
   uint256 public price;
 
-  uint256 public constant maxSupply = 10_000;
+  uint256 public maxSupply;
 
-  constructor(uint256 _price) ERC721A("SolarSystems", "SOLSYS") {
+  constructor(uint256 _price, uint256 _maxSupply) ERC721A("SolarSystems", "SOLSYS") {
     // Set the price of each NFT
     price = _price;
+    maxSupply = _maxSupply;
   }
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {

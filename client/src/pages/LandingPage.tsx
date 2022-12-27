@@ -7,6 +7,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
 import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi"
+import { BigNumber } from "ethers"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -18,25 +19,42 @@ export function LandingPage() {
 
   const [mintCount, setMintCount] = useState<number>(1)
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  // const { config: mintConfig, error: mintError } = usePrepareContractWrite({
-  //   ...solarSystemsConfig,
-  //   functionName: "mint",
-  //   args: [mintCount],
-  //   overrides: {
-  //     value: mintPrice,
-  //   },
-  // })
-  // const { write: mint } = useContractWrite(mintConfig)
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
+    ...solarSystemsConfig,
+    functionName: "totalSupply",
+  })
+
+  const { config: mintConfig, error: mintError } = usePrepareContractWrite({
+    ...solarSystemsConfig,
+    functionName: "mint",
+    args: [BigNumber.from(`${mintCount}`)],
+    overrides: {
+      value: mintPrice,
+    },
+  })
+  const { write: mint } = useContractWrite(mintConfig)
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
@@ -60,10 +78,18 @@ export function LandingPage() {
         <ConnectButton />
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
-        <p className="text-size-xs">123/1000 minted</p>
+        <p className="text-size-xs">{`${totalSupply}/${maxSupply}`} minted</p>
       </div>
       <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
-        <button className={style.claimBtn}>Mint 0.01 Ξ</button>
+        <button
+          className={style.claimBtn}
+          onClick={() => {
+            console.log("hello", mintConfig, mint)
+            mint?.()
+          }}
+        >
+          Mint 0.01 Ξ
+        </button>
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Welcome to the Solar System NFT landing page!</p>
