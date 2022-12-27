@@ -18,20 +18,12 @@ export function LandingPage() {
 
   const [mintCount, setMintCount] = useState<number>(1)
 
-  const {
-    data: mintPrice,
-    isError: isMintPriceError,
-    isLoading: isMintPriceLoading,
-  } = useContractRead({
+  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const {
-    data: maxSupply,
-    isError: isMaxSupplyError,
-    isLoading: isMaxSupplyLoading,
-  } = useContractRead({
+  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
@@ -113,11 +105,19 @@ export function LandingPage() {
       <div className="flex justify-center alignw-screen mt-24 z-1 pl-10 pr-10 z-10 relative">
         <footer className="sticky w-full py-4  bottom-0 text-center text-gray-700 text-sm">
           Made by{" "}
-          <a href="https://twitter.com/npm_luko" className="font-bold text-blue-500 hover:text-blue-800">
+          <a
+            href="https://twitter.com/npm_luko"
+            className="font-bold text-blue-500 hover:text-blue-800"
+            target="_blank"
+          >
             @npm_luko
           </a>{" "}
           and{" "}
-          <a href="https://twitter.com/stephancill" className="font-bold text-blue-500 hover:text-blue-800">
+          <a
+            href="https://twitter.com/stephancill"
+            className="font-bold text-blue-500 hover:text-blue-800"
+            target="_blank"
+          >
             @stephancill
           </a>
         </footer>
