@@ -3,6 +3,7 @@ import "@typechain/hardhat"
 import "@nomiclabs/hardhat-waffle"
 import "@nomiclabs/hardhat-ethers"
 import "hardhat-deploy"
+import "hardhat-gas-reporter"
 import dotenv from "dotenv"
 import { HardhatNetworkUserConfig } from "hardhat/types"
 dotenv.config()
@@ -41,6 +42,11 @@ const config: HardhatUserConfig = {
         version: "0.8.0",
       },
     ],
+    settings: {
+      optimizer: {
+        enabled: true,
+      },
+    },
   },
   networks: {
     hardhat: hardhatNetwork,
@@ -53,6 +59,10 @@ const config: HardhatUserConfig = {
     deployer: {
       default: 0,
     },
+  },
+  gasReporter: {
+    currency: "USD",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
   },
 }
 
