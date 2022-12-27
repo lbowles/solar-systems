@@ -1,20 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-import { ConnectButton } from './components/ConnectButton/ConnectButton';
-// import { GreeterState } from './components/GreeterState/GreeterState';
-import { useProvider, useSigner } from 'wagmi';
-import { providers } from 'ethers'
-import { Home } from './pages/Home/Home';
+import React from "react"
+import logo from "./logo.svg"
+import "./App.css"
+import "@rainbow-me/rainbowkit/styles.css"
+
+import { WagmiConfig, createClient, configureChains, mainnet } from "wagmi"
+import { publicProvider } from "wagmi/providers/public"
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { LandingPage } from "./pages/LandingPage"
+
+const { chains, provider, webSocketProvider } = configureChains([mainnet], [publicProvider()])
+
+const { connectors } = getDefaultWallets({
+  appName: "Solar Systems",
+  chains,
+})
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
+  webSocketProvider,
+})
 
 function App() {
-  const provider = useProvider()
-
   return (
-    <div className="App">
-      <ConnectButton></ConnectButton>
-      <Home></Home>
-    </div>
-  );
+    <WagmiConfig client={wagmiClient}>
+      <RainbowKitProvider chains={chains}>
+        <LandingPage />
+      </RainbowKitProvider>
+    </WagmiConfig>
+  )
 }
 
-export default App;
+export default App

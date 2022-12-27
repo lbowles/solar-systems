@@ -33,6 +33,7 @@
   },
   "scripts": {
     "live": "node live-view/index.js",
-    "qa": "node live-view/qa.js"
+    "qa": "node live-view/qa.js",
+    "start": "yarn hardhat node --export ../client/deployments.json"
   }
 }
