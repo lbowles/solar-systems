@@ -6,8 +6,9 @@ import background from ".././img/background.svg"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
-import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi"
+import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi"
 import { BigNumber } from "ethers"
+import { formatEther } from "ethers/lib/utils.js"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -18,6 +19,8 @@ export function LandingPage() {
   const [heroSVG, setHeroSVG] = useState<string>()
 
   const [mintCount, setMintCount] = useState<number>(1)
+
+  const { data: signer, isError, isLoading } = useSigner()
 
   const {
     data: mintPrice,
@@ -44,6 +47,7 @@ export function LandingPage() {
   } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
+    watch: true,
   })
 
   const { config: mintConfig, error: mintError } = usePrepareContractWrite({
@@ -51,7 +55,8 @@ export function LandingPage() {
     functionName: "mint",
     args: [BigNumber.from(`${mintCount}`)],
     overrides: {
-      value: mintPrice,
+      value: mintPrice?.mul(mintCount!),
+      gasLimit: BigNumber.from("100000"),
     },
   })
   const { write: mint } = useContractWrite(mintConfig)
@@ -81,15 +86,17 @@ export function LandingPage() {
         <p className="text-size-xs">{`${totalSupply}/${maxSupply}`} minted</p>
       </div>
       <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
+        <button onClick={() => setMintCount(Math.max(mintCount - 1, 1))}>–</button>
         <button
           className={style.claimBtn}
+          disabled={signer ? false : true}
           onClick={() => {
-            console.log("hello", mintConfig, mint)
             mint?.()
           }}
         >
-          Mint 0.01 Ξ
+          Mint {mintCount} for {formatEther(mintPrice!.mul(mintCount!))} Ξ
         </button>
+        <button onClick={() => setMintCount(mintCount + 1)}>+</button>
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Welcome to the Solar System NFT landing page!</p>

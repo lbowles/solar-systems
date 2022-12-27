@@ -6,7 +6,7 @@ import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Utilities.sol";
 import "./Renderer.sol";
-import "svgnft/contracts/SVG721.sol";
+import "svgnft/contracts/Base64.sol"; // TODO: Check if this needs to be deployed/linked
 
 contract SolarSystems is ERC721A, Ownable {
   // The price of each NFT in wei
@@ -25,7 +25,21 @@ contract SolarSystems is ERC721A, Ownable {
     string memory description = "Fully on-chain procedurally generated solar systems.";
     string memory svg = Renderer.getSVG(tokenId);
 
-    return SVG721.metadata(name, description, svg);
+    string memory json = string(
+      abi.encodePacked(
+        '{"name":"',
+        name,
+        '","description":"',
+        description,
+        '","attributes":{"trait_type":"Planets","value":"',
+        utils.uint2str(Renderer.numPlanetsForTokenId(tokenId)),
+        '"},',
+        '","image": "data:image/svg+xml;base64,',
+        Base64.encode(bytes(svg)),
+        '"}'
+      )
+    );
+    return string(abi.encodePacked("data:application/json;base64,", Base64.encode(bytes(json))));
   }
 
   function getPrice(uint256 _quantity) public view returns (uint256) {

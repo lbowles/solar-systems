@@ -1,5 +1,11 @@
 // const solarSystems = SolarSystems__factory.connect(deployments.contracts.SolarSystems.address)
-function getOrbitSVG(canvasWidth:number, planetRadius:number, orbitRadius:number, color:number[], duration:number) {
+function getOrbitSVG(
+  canvasWidth: number,
+  planetRadius: number,
+  orbitRadius: number,
+  color: number[],
+  duration: number,
+) {
   const halfCanvasWidth = canvasWidth / 2
 
   const x = orbitRadius
@@ -10,9 +16,9 @@ function getOrbitSVG(canvasWidth:number, planetRadius:number, orbitRadius:number
   const newY = x * Math.sin(angle * (Math.PI / 180)) + y * Math.cos(angle * (Math.PI / 180))
 
   return `
-  <circle cx="${halfCanvasWidth}" cy="${halfCanvasWidth}" r="${orbitRadius}" fill="none" stroke="rgba(${
-    color[0]
-  },${color[1]},${color[2]},0.5)"></circle>
+  <circle cx="${halfCanvasWidth}" cy="${halfCanvasWidth}" r="${orbitRadius}" fill="none" stroke="rgba(${color[0]},${
+    color[1]
+  },${color[2]},0.5)"></circle>
   <circle 
     cx="${halfCanvasWidth + newX}" 
     cy="${halfCanvasWidth - newY}" 
@@ -31,7 +37,7 @@ function getOrbitSVG(canvasWidth:number, planetRadius:number, orbitRadius:number
   `
 }
 
-export function getSVG(canvasWidth:number) {
+export function getSVG(canvasWidth: number) {
   const planets = []
   const numPlanets = Math.floor(Math.random() * 8) + 1
   const radiusInterval = canvasWidth / 2 / (numPlanets + 3)
@@ -52,8 +58,8 @@ export function getSVG(canvasWidth:number) {
     })
   }
 
-  // Random number between radiusInterval and radiusInterval + 10
-  const sunRadius = Math.random() * 10 + radiusInterval
+  // Random number between radiusInterval and 2*radiusInterval-10
+  const sunRadius = Math.random() * (radiusInterval * 2 - 20) + radiusInterval // TODO: Fix this
 
   return `
   <svg 
