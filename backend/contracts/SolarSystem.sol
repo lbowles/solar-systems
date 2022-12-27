@@ -12,7 +12,7 @@ contract SolarSystems is ERC721A, Ownable {
   // The price of each NFT in wei
   uint256 public price;
 
-  uint256 public constant MAX_SUPPLY = 10000;
+  uint256 public constant maxSupply = 10_000;
 
   constructor(uint256 _price) ERC721A("SolarSystems", "SOLSYS") {
     // Set the price of each NFT
@@ -33,7 +33,7 @@ contract SolarSystems is ERC721A, Ownable {
 
   function mint(uint256 _quantity) external payable {
     require(msg.value >= getPrice(_quantity), "Insufficient fee");
-    require(totalSupply() + _quantity <= MAX_SUPPLY, "Exceeds max supply");
+    require(totalSupply() + _quantity <= maxSupply, "Exceeds max supply");
     _mint(msg.sender, _quantity);
   }
 

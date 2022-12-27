@@ -1,13 +1,50 @@
 import { SolarSystems, SolarSystems__factory } from "../../../backend/types"
 import { getSVG } from "../util/sample"
 import style from "./LandingPage.module.css"
-import deployments from "../../deployments.json"
+import deployments from "../../src/deployments.json"
 import background from ".././img/background.svg"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
+import { prepareWriteContract, writeContract } from "@wagmi/core"
+import { useContractRead, useContractWrite, usePrepareContractWrite } from "wagmi"
+
+const solarSystemsConfig = {
+  address: deployments.contracts.SolarSystems.address,
+  abi: deployments.contracts.SolarSystems.abi,
+}
 
 export function LandingPage() {
   const [heroSVG, setHeroSVG] = useState<string>()
+
+  const [mintCount, setMintCount] = useState<number>(1)
+
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
+    ...solarSystemsConfig,
+    functionName: "price",
+  })
+
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
+    ...solarSystemsConfig,
+    functionName: "maxSupply",
+  })
+
+  // const { config: mintConfig, error: mintError } = usePrepareContractWrite({
+  //   ...solarSystemsConfig,
+  //   functionName: "mint",
+  //   args: [mintCount],
+  //   overrides: {
+  //     value: mintPrice,
+  //   },
+  // })
+  // const { write: mint } = useContractWrite(mintConfig)
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
@@ -31,6 +68,16 @@ export function LandingPage() {
         <ConnectButton />
       </div>
       <div className="flex justify-center alignw-screen mt-36 z-1 pl-10 pr-10 z-10 relative">
+        {/* {mint && (
+          <button
+            className={style.claimBtn}
+            onClick={() => {
+              mint()
+            }}
+          >
+            Mint 0.01 Ξ
+          </button>
+        )} */}
         <button className={style.claimBtn}>Mint 0.01 Ξ</button>
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
