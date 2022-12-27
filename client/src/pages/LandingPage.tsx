@@ -24,7 +24,10 @@ export function LandingPage() {
         <h3 className="text-base font-bold">Solar Systems</h3>
         <ConnectButton />
       </div>
-      <div className="flex justify-center alignw-screen mt-36 z-1 pl-10 pr-10 z-10 relative">
+      <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
+        <p className="text-size-xs">123/1000 minted</p>
+      </div>
+      <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
         <button className={style.claimBtn}>Mint 0.01 Ξ</button>
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
@@ -32,8 +35,12 @@ export function LandingPage() {
       </div>
       <div className="flex justify-center alignw-screen mt-10 z-1 pl-10 pr-10 relative">
         <div className=" block p-6 bg-white border border-gray-100 rounded-lg shadow-md ">
-          <div className="grid  md:gap-12 gap-4 text-sm text-justify md:grid-cols-3 " style={{ maxWidth: "800px" }}>
+          <div
+            className="grid  md:gap-12 gap-4 text-sm text-justify md:grid-cols-3 text-slate-700"
+            style={{ maxWidth: "800px" }}
+          >
             <div className="">
+              <p className="font-bold mb-3 text-slate-800">What are they?</p>
               <p>
                 Our NFTs feature fully on-chain animated SVG solar systems, which means that the media is stored
                 directly on the blockchain and there are no off-chain dependencies. This ensures that your NFTs are
@@ -41,6 +48,8 @@ export function LandingPage() {
               </p>
             </div>
             <div className="">
+              <p className="font-bold mb-3 text-slate-800">What are they?</p>
+
               <p>
                 Every solar system in our NFTs is unique, as they are generated randomly with a variety of different
                 configurations. No two solar systems are exactly the same, which means that your NFT will truly be
@@ -48,6 +57,8 @@ export function LandingPage() {
               </p>
             </div>
             <div className="">
+              <p className="font-bold mb-3 text-slate-800">What are they?</p>
+
               <p>
                 We hope you enjoy collecting and displaying your Solar System NFTs! Start minting your own today and add
                 some cosmic beauty to your collection.
