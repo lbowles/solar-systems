@@ -1,7 +1,7 @@
 import React from "react"
 import { useEffect } from "react"
 import { useAccount, useContract, useContractRead, useContractWrite, useProvider, useSigner } from "wagmi"
-import deployments from "./../../deployments.json"
+import deployments from "../../deployments.json"
 import { SolarSystems } from "../../../../backend/types"
 
 export const GreeterState = () => {
@@ -44,7 +44,7 @@ export const GreeterState = () => {
 
   return (
     <div>
-      <div>
+      {/* <div>
         {greeting}
         {error?.message}
       </div>
@@ -53,7 +53,7 @@ export const GreeterState = () => {
           <button onClick={() => account?.address && setGreeting(account?.address)}>Update greeting</button>
           <button onClick={() => setGreeting("Hardhat")}>Reset greeting</button>
         </div>
-      )}
+      )} */}
     </div>
   )
 }
