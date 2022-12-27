@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "dotenv": "^14.3.2",
+    "erc721a": "^4.2.3",
     "hardhat": "^2.8.3",
     "solidity-trigonometry": "https://github.com/mds1/solidity-trigonometry.git",
     "svgnft": "^0.1.1"
