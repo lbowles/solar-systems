@@ -1,0 +1,10 @@
+.claimBtn{
+  background-color: #0D1F2F;
+  width: 130px;
+  height: 30px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color:white;
+  border-radius: 15px;
+}
