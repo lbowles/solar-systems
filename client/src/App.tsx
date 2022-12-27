@@ -4,7 +4,7 @@ import { ConnectButton } from './components/ConnectButton/ConnectButton';
 // import { GreeterState } from './components/GreeterState/GreeterState';
 import { useProvider, useSigner } from 'wagmi';
 import { providers } from 'ethers'
-import { Home } from './components/Home/Home';
+import { Home } from './pages/Home/Home';
 
 function App() {
   const provider = useProvider()
