@@ -5,7 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css"
 
 import { WagmiConfig, createClient, configureChains, mainnet } from "wagmi"
 import { publicProvider } from "wagmi/providers/public"
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit"
+import { getDefaultWallets, lightTheme, RainbowKitProvider } from "@rainbow-me/rainbowkit"
 import { LandingPage } from "./pages/LandingPage"
 
 const { chains, provider, webSocketProvider } = configureChains([mainnet], [publicProvider()])
@@ -25,7 +25,15 @@ const wagmiClient = createClient({
 function App() {
   return (
     <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+      <RainbowKitProvider
+        chains={chains}
+        theme={{
+          ...lightTheme(),
+          fonts: {
+            body: "Space Mono, monospace",
+          },
+        }}
+      >
         <LandingPage />
       </RainbowKitProvider>
     </WagmiConfig>

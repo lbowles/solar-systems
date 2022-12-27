@@ -4,10 +4,16 @@ import style from "./LandingPage.module.css"
 import deployments from "../../deployments.json"
 import background from ".././img/background.svg"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { useEffect, useState } from "react"
 
 export function LandingPage() {
-  const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
-  const url = URL.createObjectURL(svg)
+  const [heroSVG, setHeroSVG] = useState<string>()
+
+  useEffect(() => {
+    const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
+    const url = URL.createObjectURL(svg)
+    setHeroSVG(url)
+  }, [])
 
   return (
     <div>
@@ -18,10 +24,10 @@ export function LandingPage() {
           alt="screenshot"
           style={{ minWidth: "1510px", maxWidth: "1510px" }}
         ></img>
-        <img src={url} style={{ marginTop: "195px" }}></img>
+        <img src={heroSVG} style={{ marginTop: "195px" }}></img>
       </div>
       <div className="flex justify-between p-10  absolute w-full top-0">
-        <h3 className="text-base font-bold">Solar Systems</h3>
+        <h3 className="text-base font-bold">SOLAR SYSTEMS</h3>
         <ConnectButton />
       </div>
       <div className="flex justify-center alignw-screen mt-36 z-1 pl-10 pr-10 z-10 relative">
