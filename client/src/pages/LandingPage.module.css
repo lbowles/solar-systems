@@ -1,10 +1,18 @@
 .claimBtn{
   background-color: #0D1F2F;
   width: 130px;
-  height: 30px;
+  height: 34px;
   text-align: center;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
   color:white;
-  border-radius: 15px;
+  border-radius: 18px;
+}
+.claimBtn:hover{
+  background-color: #15324a;
+  transition-duration: 0.2s;
+  transition: 0.2s ease-in-out;
+}
+.claimBtn:disabled{
+  background-color: #505050;
 }
