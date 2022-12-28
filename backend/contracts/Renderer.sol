@@ -17,6 +17,28 @@ library Renderer {
     uint256 duration;
   }
 
+  function translateWithAngle(
+    int256 x,
+    int256 y,
+    uint256 degrees
+  ) internal pure returns (int256, int256) {
+    int256 newX = x;
+    int256 newY = y;
+
+    newX =
+      x *
+      Trigonometry.cos(degrees * (Trigonometry.PI / 180)) -
+      y *
+      Trigonometry.sin(degrees * (Trigonometry.PI / 180));
+    newY =
+      x *
+      Trigonometry.sin(degrees * (Trigonometry.PI / 180)) +
+      y *
+      Trigonometry.cos(degrees * (Trigonometry.PI / 180));
+
+    return (newX, newY);
+  }
+
   function getOrbitSVG(Planet memory planet) public pure returns (string memory) {
     uint256 halfCanvasWidth = SIZE / 2;
 
@@ -24,47 +46,9 @@ library Renderer {
     int256 x = int256(planet.orbitRadius);
     int256 y = 0;
 
-    int256 newX = x;
-    int256 newY = y;
+    (int256 innerX, int256 innerY) = translateWithAngle(x - 1, y, planet.initialAngleDegrees);
+    (int256 outerX, int256 outerY) = translateWithAngle(x, y, planet.initialAngleDegrees);
 
-    newX =
-      x *
-      Trigonometry.cos(planet.initialAngleDegrees * (Trigonometry.PI / 180)) -
-      y *
-      Trigonometry.sin(planet.initialAngleDegrees * (Trigonometry.PI / 180));
-    newY =
-      x *
-      Trigonometry.sin(planet.initialAngleDegrees * (Trigonometry.PI / 180)) +
-      y *
-      Trigonometry.cos(planet.initialAngleDegrees * (Trigonometry.PI / 180));
-
-    // JavaScript implementation
-    //   `<g>
-    //   <circle
-    //     cx="${halfCanvasWidth + newX}"
-    //     cy="${halfCanvasWidth - newY}"
-    //     r="${planetRadius}"
-    //     fill="rgb(${color[0]},${color[1]},${color[2]})"
-    //   />
-    //   <circle
-    //     cx="${halfCanvasWidth + newX}"
-    //     cy="${halfCanvasWidth - newY}"
-    //     r="${ringsRadius}"
-    //     fill="none"
-    //     stroke="rgb(${color[0]},${color[1]},${color[2]})"
-    //     stroke-width="1"
-    //   />
-    //   <animateTransform
-    //       attributeName="transform"
-    //       type="rotate"
-    //       from="0 ${halfCanvasWidth} ${halfCanvasWidth}"
-    //       to="360 ${halfCanvasWidth} ${halfCanvasWidth}"
-    //       dur="${duration}"
-    //       repeatCount="indefinite"/>
-    // </g>
-    // <circle cx="${halfCanvasWidth}" cy="${halfCanvasWidth}" r="${orbitRadius}" fill="none" stroke="rgba(${color[0]},${
-    //   color[1]
-    // },${color[2]},0.5)"/>`
     string memory colorTuple = string.concat(
       utils.uint2str(planet.color[0]),
       ",",
@@ -77,29 +61,67 @@ library Renderer {
 
     // Generate the SVG string
     string memory renderedSVG = string.concat(
-      '<g><circle cx="',
-      utils.uint2str(uint256(int256(halfCanvasWidth) + newX / 1e18)),
-      '" cy="',
-      utils.uint2str(uint256(int256(halfCanvasWidth) - newY / 1e18)),
-      '" r="',
-      utils.uint2str(planet.planetRadius),
-      '" fill="rgb(',
-      colorTuple,
-      ')"/>',
       '<circle cx="',
-      utils.uint2str(uint256(int256(halfCanvasWidth) + newX / 1e18)),
+      utils.uint2str(halfCanvasWidth),
       '" cy="',
-      utils.uint2str(uint256(int256(halfCanvasWidth) - newY / 1e18)),
+      utils.uint2str(halfCanvasWidth),
       '" r="',
-      utils.uint2str(ringsRadius),
-      '" fill="none" stroke-width="1" stroke="rgb(',
+       utils.uint2str(planet.orbitRadius),
+      '" fill="none" stroke="rgba(',
       colorTuple,
-      ')"/>',
-      '<animateTransform attributeName="transform" type="rotate" from="0 '
+      ',0.5)"/>',
+      // Inner circle
+      '<g><circle cx="',
+      utils.uint2str(uint256(int256(halfCanvasWidth) + innerX / 1e18)),
+      '" cy="'
+      
     );
 
     renderedSVG = string.concat(
       renderedSVG,
+      utils.uint2str(uint256(int256(halfCanvasWidth) - innerY / 1e18)),
+      '" r="',
+      utils.uint2str(planet.planetRadius - 2),
+      '" fill="rgb(',
+      colorTuple,
+      ')"/>'
+      // Outer circle
+      '<circle cx="',
+      utils.uint2str(uint256(int256(halfCanvasWidth) + outerX / 1e18)),
+      '" cy="'
+    );
+
+    renderedSVG = string.concat(
+      renderedSVG,
+      utils.uint2str(uint256(int256(halfCanvasWidth) - outerY / 1e18)),
+      '" r="',
+      utils.uint2str(planet.planetRadius),
+      '" fill-opacity="0.8" fill="rgb(',
+      colorTuple,
+      ')"/>'
+      
+      
+    );
+
+    if (planet.ringsOffset != 0) {
+      renderedSVG = string.concat(
+        renderedSVG,
+        // Rings
+        '<circle cx="',
+        utils.uint2str(uint256(int256(halfCanvasWidth) + outerX / 1e18)),
+        '" cy="',
+        utils.uint2str(uint256(int256(halfCanvasWidth) - outerY / 1e18)),
+        '" r="',
+        utils.uint2str(ringsRadius),
+        '" fill="none" stroke-width="1" stroke="rgb(',
+        colorTuple,
+        ')"/>'
+      );
+    }
+
+    renderedSVG = string.concat(
+      renderedSVG,
+      '<animateTransform attributeName="transform" type="rotate" from="0 ',
       utils.uint2str(halfCanvasWidth),
       " ",
       utils.uint2str(halfCanvasWidth),
@@ -107,33 +129,24 @@ library Renderer {
       utils.uint2str(halfCanvasWidth),
       " ",
       utils.uint2str(halfCanvasWidth),
-      '" dur="',
-      utils.uint2str(planet.duration),
-      's" repeatCount="indefinite"/>',
-      "</g>",
-      '<circle cx="',
-      utils.uint2str(halfCanvasWidth),
-      '" cy="',
-      utils.uint2str(halfCanvasWidth),
-      '" r="'
+      '" dur="'
     );
 
     renderedSVG = string.concat(
       renderedSVG,
-      utils.uint2str(planet.orbitRadius),
-      '" fill="none" stroke="rgba(',
-      colorTuple,
-      ',0.5)"/>'
+      utils.uint2str(planet.duration),
+      's" repeatCount="indefinite"></animateTransform>',
+      "</g>"
     );
 
     return renderedSVG;
   }
 
-  function numPlanetsForTokenId(uint256 _tokenId) public pure returns (uint256) {
-    return utils.randomRange(_tokenId, "numPlanets", 1, 8);
+  function numPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
+    return utils.randomRange(_tokenId, "numPlanets", 1, 6);
   }
 
-  function numRingedPlanetsForTokenId(uint256 _tokenId) public pure returns (uint256) {
+  function numRingedPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     uint256 numRingedPlanets;
     for (uint256 i = 0; i < numPlanetsForTokenId(_tokenId); i++) {
       if (utils.randomRange(_tokenId, string.concat("ringedPlanet", utils.uint2str(i)), 0, 10) == 5) {
@@ -143,13 +156,18 @@ library Renderer {
     return numRingedPlanets;
   }
 
+  function hasRareStarForTokenId(uint256 _tokenId) internal pure returns (bool) {
+    return utils.randomRange(_tokenId, "rareStar", 0, 10) == 5;
+  }
+
   function getSVG(uint256 _tokenId) public pure returns (string memory) {
     uint256 numPlanets = numPlanetsForTokenId(_tokenId);
     uint256 radiusInterval = SIZE / 2 / (numPlanets + 3);
     uint256 planetRadiusUpperBound = utils.min(radiusInterval / 2, SIZE / 4);
     uint256 planetRadiusLowerBound = radiusInterval / 4;
 
-    uint256 sunRadius = utils.randomRange(_tokenId, "sunRadius", radiusInterval, radiusInterval * 2 - 10);
+    uint256 starRadius = utils.randomRange(_tokenId, "starRadius", radiusInterval, radiusInterval * 2 - 10);
+    string memory starAttributes = hasRareStarForTokenId(_tokenId) ? 'fill="#39B1FF"' : 'fill="#FFDA17"';
 
     string memory renderSvg = string.concat(
       '<svg width="',
@@ -171,8 +189,10 @@ library Renderer {
       '" cy="',
       utils.uint2str(SIZE / 2),
       '" r="',
-      utils.uint2str(sunRadius),
-      '" fill="#FFDA17"></circle>'
+      utils.uint2str(starRadius),
+      '" ',
+      starAttributes,
+      "/>"
     );
 
     for (uint256 i = 0; i < numPlanets; i++) {

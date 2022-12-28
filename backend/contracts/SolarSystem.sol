@@ -35,7 +35,9 @@ contract SolarSystems is ERC721A, Ownable {
         utils.uint2str(Renderer.numPlanetsForTokenId(tokenId)),
         '}, {"trait_type":"Ringed Planets", "value": ',
         utils.uint2str(Renderer.numRingedPlanetsForTokenId(tokenId)),
-        '}], "image": "data:image/svg+xml;base64,',
+        '}, {"trait_type":"Star Type", "value": "',
+        Renderer.hasRareStarForTokenId(tokenId) ? "Blue" : "Normal",
+        '"}], "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(svg)),
         '"}'
       )
@@ -51,6 +53,13 @@ contract SolarSystems is ERC721A, Ownable {
     require(msg.value >= getPrice(_quantity), "Insufficient fee");
     require(totalSupply() + _quantity <= maxSupply, "Exceeds max supply");
     _mint(msg.sender, _quantity);
+  }
+
+  function airdrop(address[] memory _recipients, uint256 _quantity) external onlyOwner {
+    require(totalSupply() + _quantity * _recipients.length <= maxSupply, "Exceeds max supply");
+    for (uint256 i = 0; i < _recipients.length; i++) {
+      _mint(_recipients[i], _quantity);
+    }
   }
 
   function withdraw() external onlyOwner {

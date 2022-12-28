@@ -46,12 +46,15 @@ describe("SolarSystems", function () {
     expect(json.name).to.equal(name)
     expect(json.description).to.equal(description)
     expect(json.image).to.contain("data:image/svg+xml;base64")
-    expect(json.attributes).to.have.lengthOf(2)
+
+    expect(json.attributes).to.have.lengthOf(3)
+
     expect(json.attributes[0]["trait_type"]).to.equal("Planets")
     expect(json.attributes[0]["value"]).to.be.greaterThan(0)
-    expect(json.attributes).to.have.lengthOf(2)
     expect(json.attributes[1]["trait_type"]).to.equal("Ringed Planets")
     expect(json.attributes[1]["value"]).to.be.greaterThanOrEqual(0)
+    expect(json.attributes[2]["trait_type"]).to.equal("Star Type")
+    expect(json.attributes[2]["value"]).to.be.a.string
   })
 
   it("Should allow the owner to withdraw their balance", async function () {
@@ -65,5 +68,27 @@ describe("SolarSystems", function () {
 
   it("Should not allow a non-owner to withdraw the contract's balance", async function () {
     await expect(solarSystems.connect(signers[1]).withdraw()).to.be.revertedWith("Ownable: caller is not the owner")
+  })
+
+  it("Should allow the owner to airdrop to an array of recipients", async function () {
+    const [owner, recipient1, recipient2] = signers
+    const initialSupply = await solarSystems.totalSupply()
+    const recipients = [recipient1.address, recipient2.address]
+    const quantity = 10
+    await solarSystems.connect(owner).airdrop(recipients, quantity)
+    const finalSupply = await solarSystems.totalSupply()
+    expect(finalSupply).to.equal(initialSupply.add(recipients.length * quantity))
+
+    // Check if recipient's balance has increased
+    expect(await solarSystems.balanceOf(recipient1.address)).to.equal(quantity)
+    expect(await solarSystems.balanceOf(recipient2.address)).to.equal(quantity)
+  })
+
+  it("Should not allow a non-owner to airdrop to an array of recipients", async function () {
+    const recipients = [signers[1].address]
+    const quantity = 10
+    await expect(solarSystems.connect(signers[1]).airdrop(recipients, quantity)).to.be.revertedWith(
+      "Ownable: caller is not the owner",
+    )
   })
 })
