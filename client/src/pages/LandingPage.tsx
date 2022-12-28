@@ -77,12 +77,11 @@ export function LandingPage() {
     <div>
       <div className="flex justify-center alignw-screen">
         <img
-          className="object-cover top-0 absolute z-0"
+          className="object-cover top-0 absolute z-0 min-w-[1510px] max-w-[1510px]"
           src={background}
           alt="screenshot"
-          style={{ minWidth: "1510px", maxWidth: "1510px" }}
         ></img>
-        <img src={heroSVG} style={{ marginTop: "195px" }}></img>
+        <img src={heroSVG} className="mt-[195px]"></img>
       </div>
       <div className="flex justify-between p-10  absolute w-full top-0">
         <h3 className="text-base font-bold">SOLAR SYSTEMS</h3>
