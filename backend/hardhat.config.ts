@@ -50,6 +50,16 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: hardhatNetwork,
+    goerli: {
+      chainId: 5,
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+      accounts: [process.env.DEFAULT_DEPLOYER_KEY || ""],
+      verify: {
+        etherscan: {
+          apiKey: process.env.ETHERSCAN_API_KEY || "",
+        },
+      },
+    },
   },
   typechain: {
     outDir: "types",
