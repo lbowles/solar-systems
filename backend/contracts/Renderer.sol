@@ -17,6 +17,14 @@ library Renderer {
     uint256 duration;
   }
 
+  struct SolarSystem {
+    uint256 numPlanets;
+    uint256 numRingedPlanets;
+    uint256 starRadius;
+    bool hasRareStar;
+    Planet[] planets;
+  }
+
   function translateWithAngle(
     int256 x,
     int256 y,
@@ -160,14 +168,60 @@ library Renderer {
     return utils.randomRange(_tokenId, "rareStar", 0, 10) == 5;
   }
 
-  function getSVG(uint256 _tokenId) public pure returns (string memory) {
+  function planetForTokenId(uint256 _tokenId, uint256 _index, uint256 planetRadiusLowerBound, uint256 planetRadiusUpperBound,  uint256 radiusInterval) private pure returns (Planet memory planet) {
+    if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(_index)), 0, 10) == 5) {
+        planet.ringsOffset = 4;
+      }
+
+      planet.planetRadius = utils.randomRange(
+        _tokenId,
+        string.concat("planetRadius", utils.uint2str(_index)),
+        planetRadiusLowerBound,
+        planetRadiusUpperBound - planet.ringsOffset
+      );
+
+      planet.orbitRadius = radiusInterval * (_index + 3);
+      planet.duration = utils.randomRange(_tokenId, string.concat("duration", utils.uint2str(_index)), 5, 15);
+
+      planet.color[0] = utils.randomRange(_tokenId, string.concat("colorR", utils.uint2str(_index)), 100, 255);
+      planet.color[1] = utils.randomRange(_tokenId, string.concat("colorG", utils.uint2str(_index)), 100, 255);
+      planet.color[2] = utils.randomRange(_tokenId, string.concat("colorB", utils.uint2str(_index)), 100, 255);
+
+      planet.initialAngleDegrees = utils.randomRange(
+        _tokenId,
+        string.concat("initialAngle", utils.uint2str(_index)),
+        0,
+        360
+      );
+
+      planet.ringsRadius = utils.randomRange(
+        _tokenId,
+        string.concat("ringsRadius", utils.uint2str(_index)),
+        0,
+        planet.planetRadius / 2
+      );
+  }
+
+  function solarSystemForTokenId(uint256 _tokenId) internal pure returns (SolarSystem memory solarSystem) {
     uint256 numPlanets = numPlanetsForTokenId(_tokenId);
+    uint256 numRingedPlanets = numRingedPlanetsForTokenId(_tokenId);
     uint256 radiusInterval = SIZE / 2 / (numPlanets + 3);
     uint256 planetRadiusUpperBound = utils.min(radiusInterval / 2, SIZE / 4);
     uint256 planetRadiusLowerBound = radiusInterval / 4;
 
-    uint256 starRadius = utils.randomRange(_tokenId, "starRadius", radiusInterval, radiusInterval * 2 - 10);
-    string memory starAttributes = hasRareStarForTokenId(_tokenId) ? 'fill="#39B1FF"' : 'fill="#FFDA17"';
+    solarSystem.starRadius = utils.randomRange(_tokenId, "starRadius", radiusInterval, radiusInterval * 2 - 10);
+    solarSystem.hasRareStar = hasRareStarForTokenId(_tokenId);
+    solarSystem.numPlanets = numPlanets;
+    solarSystem.numRingedPlanets = numRingedPlanets;
+
+    solarSystem.planets = new Planet[](numPlanets);
+    for (uint256 i = 0; i < numPlanets; i++) {
+      solarSystem.planets[i] = planetForTokenId(_tokenId, i, planetRadiusLowerBound, planetRadiusUpperBound, radiusInterval);
+    }
+  }
+
+  function getSVG(SolarSystem memory solarSystem) internal pure returns (string memory) {
+    string memory starAttributes = solarSystem.hasRareStar ? 'fill="#39B1FF"' : 'fill="#FFDA17"';
 
     string memory renderSvg = string.concat(
       '<svg width="',
@@ -189,53 +243,14 @@ library Renderer {
       '" cy="',
       utils.uint2str(SIZE / 2),
       '" r="',
-      utils.uint2str(starRadius),
+      utils.uint2str(solarSystem.starRadius),
       '" ',
       starAttributes,
       "/>"
     );
 
-    for (uint256 i = 0; i < numPlanets; i++) {
-      // const ringsOffset = Math.round(Math.random()) * 1
-      // const radius =
-      //   Math.random() * (planetRadiusUpperBound - planetRadiusLowerBound - ringsOffset) + planetRadiusLowerBound
-      // const ringsRadius = ringsOffset + radius
-
-      Planet memory planet;
-
-      if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(i)), 0, 10) == 5) {
-        planet.ringsOffset = 4;
-      }
-
-      planet.planetRadius = utils.randomRange(
-        _tokenId,
-        string.concat("planetRadius", utils.uint2str(i)),
-        planetRadiusLowerBound,
-        planetRadiusUpperBound - planet.ringsOffset
-      );
-
-      planet.orbitRadius = radiusInterval * (i + 3);
-      planet.duration = utils.randomRange(_tokenId, string.concat("duration", utils.uint2str(i)), 5, 15);
-
-      planet.color[0] = utils.randomRange(_tokenId, string.concat("colorR", utils.uint2str(i)), 100, 255);
-      planet.color[1] = utils.randomRange(_tokenId, string.concat("colorG", utils.uint2str(i)), 100, 255);
-      planet.color[2] = utils.randomRange(_tokenId, string.concat("colorB", utils.uint2str(i)), 100, 255);
-
-      planet.initialAngleDegrees = utils.randomRange(
-        _tokenId,
-        string.concat("initialAngle", utils.uint2str(i)),
-        0,
-        360
-      );
-
-      planet.ringsRadius = utils.randomRange(
-        _tokenId,
-        string.concat("ringsRadius", utils.uint2str(i)),
-        0,
-        planet.planetRadius / 2
-      );
-
-      string memory planetSVG = getOrbitSVG(planet);
+    for (uint256 i = 0; i < solarSystem.numPlanets; i++) {
+      string memory planetSVG = getOrbitSVG(solarSystem.planets[i]);
       renderSvg = string.concat(renderSvg, planetSVG);
     }
 
@@ -245,6 +260,7 @@ library Renderer {
   }
 
   function render(uint256 _tokenId) public pure returns (string memory) {
-    return getSVG(_tokenId);
+    SolarSystem memory solarSystem = solarSystemForTokenId(_tokenId);
+    return getSVG(solarSystem);
   }
 }
