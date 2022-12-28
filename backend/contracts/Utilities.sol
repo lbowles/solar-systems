@@ -17,6 +17,10 @@ library utils {
     return (rand % (upper - lower)) + lower;
   }
 
+  function min(uint256 a, uint256 b) internal pure returns (uint256) {
+    return a < b ? a : b;
+  }
+
   // converts an unsigned integer to a string
   function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {
     if (_i == 0) {

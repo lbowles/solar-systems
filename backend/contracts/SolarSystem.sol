@@ -33,6 +33,8 @@ contract SolarSystems is ERC721A, Ownable {
         description,
         '","attributes":[{"trait_type":"Planets","value":',
         utils.uint2str(Renderer.numPlanetsForTokenId(tokenId)),
+        '}, {"trait_type":"Ringed Planets", "value": ',
+        utils.uint2str(Renderer.numRingedPlanetsForTokenId(tokenId)),
         '}], "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(svg)),
         '"}'

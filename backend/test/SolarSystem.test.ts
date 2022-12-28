@@ -46,9 +46,12 @@ describe("SolarSystems", function () {
     expect(json.name).to.equal(name)
     expect(json.description).to.equal(description)
     expect(json.image).to.contain("data:image/svg+xml;base64")
-    expect(json.attributes).to.have.lengthOf(1)
+    expect(json.attributes).to.have.lengthOf(2)
     expect(json.attributes[0]["trait_type"]).to.equal("Planets")
     expect(json.attributes[0]["value"]).to.be.greaterThan(0)
+    expect(json.attributes).to.have.lengthOf(2)
+    expect(json.attributes[1]["trait_type"]).to.equal("Ringed Planets")
+    expect(json.attributes[1]["value"]).to.be.greaterThanOrEqual(0)
   })
 
   it("Should allow the owner to withdraw their balance", async function () {
