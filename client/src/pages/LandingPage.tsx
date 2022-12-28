@@ -22,29 +22,17 @@ export function LandingPage() {
 
   const { data: signer, isError, isLoading } = useSigner()
 
-  const {
-    data: mintPrice,
-    isError: isMintPriceError,
-    isLoading: isMintPriceLoading,
-  } = useContractRead({
+  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const {
-    data: maxSupply,
-    isError: isMaxSupplyError,
-    isLoading: isMaxSupplyLoading,
-  } = useContractRead({
+  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const {
-    data: totalSupply,
-    isError: isTotalSupplyError,
-    isLoading: isTotalSupplyLoading,
-  } = useContractRead({
+  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -86,7 +74,12 @@ export function LandingPage() {
         <p className="text-size-xs">{`${totalSupply}/${maxSupply}`} minted</p>
       </div>
       <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
-        <button onClick={() => setMintCount(Math.max(mintCount - 1, 1))}>–</button>
+        <button
+          className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
+          onClick={() => setMintCount(Math.max(mintCount - 1, 1))}
+        >
+          –
+        </button>
         <button
           className={style.claimBtn}
           disabled={signer ? false : true}
@@ -96,7 +89,12 @@ export function LandingPage() {
         >
           Mint {mintCount} for {formatEther(mintPrice!.mul(mintCount!))} Ξ
         </button>
-        <button onClick={() => setMintCount(mintCount + 1)}>+</button>
+        <button
+          className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
+          onClick={() => setMintCount(mintCount + 1)}
+        >
+          +
+        </button>
       </div>
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Welcome to the Solar System NFT landing page!</p>
@@ -117,7 +115,6 @@ export function LandingPage() {
             </div>
             <div className="">
               <p className="font-bold mb-3 text-slate-800">What are they?</p>
-
               <p>
                 Every solar system in our NFTs is unique, as they are generated randomly with a variety of different
                 configurations. No two solar systems are exactly the same, which means that your NFT will truly be
