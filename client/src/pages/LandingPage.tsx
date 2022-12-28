@@ -3,7 +3,8 @@ import { getSVG } from "../util/sample"
 import style from "./LandingPage.module.css"
 import deployments from "../../src/deployments.json"
 import background from ".././img/background.svg"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+import loading from ".././img/loading.svg"
+import { ConnectButton, useAddRecentTransaction } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi"
@@ -21,6 +22,8 @@ export function LandingPage() {
   const [mintCount, setMintCount] = useState<number>(1)
 
   const { data: signer, isError, isLoading } = useSigner()
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const {
     data: mintPrice,
@@ -74,6 +77,10 @@ export function LandingPage() {
   useEffect(() => {
     if (mintTx) {
       console.log("mintTx", mintTx.hash)
+      addRecentTransaction({
+        hash: mintTx.hash,
+        description: "Mint SOLARSYSTEM",
+      })
     }
   }, [mintTx])
 
@@ -109,17 +116,23 @@ export function LandingPage() {
         >
           –
         </button>
-        {mintPrice && mintCount && (
-          <button
-            className={style.claimBtn}
-            disabled={signer ? false : true}
-            onClick={() => {
-              mint?.()
-            }}
-          >
-            Mint {mintCount} for {formatEther(mintPrice.mul(mintCount!))} Ξ
-          </button>
-        )}
+        <button
+          className={style.claimBtn}
+          disabled={signer ? false : true}
+          onClick={() => {
+            mint?.()
+          }}
+        >
+          {!isMintTxLoading ? (
+            "Mint " + mintCount + " for " + formatEther(mintPrice!.mul(mintCount!)) + " Ξ"
+          ) : (
+            <>
+              <div className="flex flex-row">
+                <img src={loading} className="animate-spin w-4"></img>‎ Loading
+              </div>
+            </>
+          )}
+        </button>
         <button
           className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
           onClick={() => setMintCount(mintCount + 1)}
