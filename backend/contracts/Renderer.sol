@@ -101,7 +101,7 @@ library Renderer {
     uint256 planetRadiusUpperBound = min(radiusInterval / 2, SIZE / 4);
     uint256 planetRadiusLowerBound = radiusInterval / 4;
 
-    uint256 sunRadius = utils.randomRange(_tokenId, "sunRadius", radiusInterval * 2, radiusInterval * 2 + 10);
+    uint256 sunRadius = utils.randomRange(_tokenId, "sunRadius", radiusInterval, radiusInterval * 2 - 10);
 
     string memory renderSvg = string.concat(
       '<svg width="',

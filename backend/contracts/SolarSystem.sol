@@ -22,7 +22,7 @@ contract SolarSystems is ERC721A, Ownable {
 
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
     string memory name = string(abi.encodePacked("SolarSystems #", utils.uint2str(tokenId)));
-    string memory description = "Fully on-chain procedurally generated solar systems.";
+    string memory description = "Fully on-chain, procedurally generated, animated solar systems.";
     string memory svg = Renderer.getSVG(tokenId);
 
     string memory json = string(
@@ -31,10 +31,9 @@ contract SolarSystems is ERC721A, Ownable {
         name,
         '","description":"',
         description,
-        '","attributes":{"trait_type":"Planets","value":"',
+        '","attributes":[{"trait_type":"Planets","value":',
         utils.uint2str(Renderer.numPlanetsForTokenId(tokenId)),
-        '"},',
-        '","image": "data:image/svg+xml;base64,',
+        '}], "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(svg)),
         '"}'
       )

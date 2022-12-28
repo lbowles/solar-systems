@@ -35,6 +35,7 @@
     "xmldom": "^0.6.0"
   },
   "scripts": {
+    "test": "yarn hardhat test",
     "live": "node live-view/index.js",
     "qa": "node live-view/qa.js",
     "start": "yarn hardhat node --export ../client/src/deployments.json"

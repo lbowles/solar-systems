@@ -36,7 +36,7 @@ describe("SolarSystems", function () {
   it("Should return the correct token URI for a given token ID", async function () {
     const tokenId = 1
     const name = "SolarSystems #" + tokenId
-    const description = "Fully on-chain procedurally generated solar systems."
+    const description = "Fully on-chain, procedurally generated, animated solar systems."
     const svg = await solarSystems.tokenURI(tokenId)
 
     // Decode base64 encoded json
@@ -46,6 +46,9 @@ describe("SolarSystems", function () {
     expect(json.name).to.equal(name)
     expect(json.description).to.equal(description)
     expect(json.image).to.contain("data:image/svg+xml;base64")
+    expect(json.attributes).to.have.lengthOf(1)
+    expect(json.attributes[0]["trait_type"]).to.equal("Planets")
+    expect(json.attributes[0]["value"]).to.be.greaterThan(0)
   })
 
   it("Should allow the owner to withdraw their balance", async function () {
