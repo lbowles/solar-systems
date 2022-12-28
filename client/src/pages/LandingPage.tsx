@@ -56,7 +56,6 @@ export function LandingPage() {
     args: [BigNumber.from(`${mintCount}`)],
     overrides: {
       value: mintPrice?.mul(mintCount!),
-      gasLimit: BigNumber.from("100000"),
     },
   })
   const {
