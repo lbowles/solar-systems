@@ -6,7 +6,7 @@ import "erc721a/contracts/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./Utilities.sol";
 import "./Renderer.sol";
-import "svgnft/contracts/Base64.sol"; // TODO: Check if this needs to be deployed/linked
+import "svgnft/contracts/Base64.sol";
 
 contract SolarSystems is ERC721A, Ownable {
   // The price of each NFT in wei

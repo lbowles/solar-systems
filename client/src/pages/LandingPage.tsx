@@ -109,15 +109,17 @@ export function LandingPage() {
         >
           –
         </button>
-        <button
-          className={style.claimBtn}
-          disabled={signer ? false : true}
-          onClick={() => {
-            mint?.()
-          }}
-        >
-          Mint {mintCount} for {formatEther(mintPrice!.mul(mintCount!))} Ξ
-        </button>
+        {mintPrice && mintCount && (
+          <button
+            className={style.claimBtn}
+            disabled={signer ? false : true}
+            onClick={() => {
+              mint?.()
+            }}
+          >
+            Mint {mintCount} for {formatEther(mintPrice.mul(mintCount!))} Ξ
+          </button>
+        )}
         <button
           className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
           onClick={() => setMintCount(mintCount + 1)}

@@ -1,10 +1,11 @@
-import { HardhatUserConfig, task } from "hardhat/config"
-import "@typechain/hardhat"
-import "@nomiclabs/hardhat-waffle"
 import "@nomiclabs/hardhat-ethers"
+import "@nomiclabs/hardhat-etherscan"
+import "@nomiclabs/hardhat-waffle"
+import "@typechain/hardhat"
+import dotenv from "dotenv"
 import "hardhat-deploy"
 import "hardhat-gas-reporter"
-import dotenv from "dotenv"
+import { HardhatUserConfig, task } from "hardhat/config"
 import { HardhatNetworkUserConfig, NetworksUserConfig } from "hardhat/types"
 dotenv.config()
 
@@ -53,19 +54,24 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.8.12",
+        version: "0.8.16",
       },
-      {
-        version: "0.8.0",
-      },
+      // {
+      //   version: "0.8.4",
+      // },
     ],
     settings: {
       optimizer: {
-        enabled: true,
+        enabled: false,
       },
     },
   },
   networks,
+  etherscan: {
+    // Your API key for Etherscan
+    // Obtain one at https://etherscan.io/
+    apiKey: process.env.ETHERSCAN_API_KEY || "",
+  },
   typechain: {
     outDir: "types",
     target: "ethers-v5",

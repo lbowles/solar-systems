@@ -196,11 +196,6 @@ library Renderer {
     );
 
     for (uint256 i = 0; i < numPlanets; i++) {
-      // const ringsOffset = Math.round(Math.random()) * 1
-      // const radius =
-      //   Math.random() * (planetRadiusUpperBound - planetRadiusLowerBound - ringsOffset) + planetRadiusLowerBound
-      // const ringsRadius = ringsOffset + radius
-
       Planet memory planet;
 
       if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(i)), 0, 10) == 5) {
