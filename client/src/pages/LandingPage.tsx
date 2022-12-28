@@ -28,6 +28,8 @@ const solarSystemsConfig = {
   abi: deployments.contracts.SolarSystems.abi,
 }
 
+const etherscanBaseURL = `https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io`
+
 export function LandingPage() {
   const [heroSVG, setHeroSVG] = useState<string>()
 
@@ -37,17 +39,29 @@ export function LandingPage() {
 
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -68,7 +82,11 @@ export function LandingPage() {
     isSuccess: isMintSignSuccess,
   } = useContractWrite(mintConfig)
 
-  const { data: mintTx, isError: isMintTxError, isLoading: isMintTxLoading } = useWaitForTransaction({
+  const {
+    data: mintTx,
+    isError: isMintTxError,
+    isLoading: isMintTxLoading,
+  } = useWaitForTransaction({
     hash: mintSignResult?.hash,
     confirmations: 1,
   })
@@ -76,10 +94,28 @@ export function LandingPage() {
   const copy = [
     {
       heading: "What are Solar Systems?",
-      body:
-        "Synthetic CryptoPunks is inspired by the historical collection of 10,000 CryptoPunks by Larva Labs and Synthetic Loot by dhof. It generates a unique, fully on-chain CryptoPunk for each Ethereum address.",
+      body: "Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is limited to 1,000 Solar Systems.",
     },
-    { heading: "Features", body: "Each Synthetic Punk Is generated from assets stored fully on-chain" },
+    {
+      heading: "Features",
+      body: (
+        <p>
+          Each Solar System is
+          <ul>
+            <li>
+              Procedurally generated. This means that the solar systems are generated using a set of rules or
+              procedures, rather than being created manually or pre-designed. This makes each solar system fully unique.
+            </li>
+            <li>
+              <a href={`${etherscanBaseURL}/address/${deployments.contracts.Renderer.address}`}>
+                Fully on-chain. This means that your NFT will exist for as long as the Ethereum blockchain is around.
+              </a>
+            </li>
+            <li>Animated. Planets orbit around a star which add to a dynamic and lively viewing experience.</li>
+          </ul>
+        </p>
+      ),
+    },
   ]
 
   useEffect(() => {
@@ -206,6 +242,7 @@ export function LandingPage() {
                 <Disclosure as="div" className={index === 1 ? "mt-3" : ""}>
                   {({ open }) => (
                     <>
+                      {/* TODO: All open by default. Use formatting in body (lists, links etc) */}
                       <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
                         <span>{items.heading}</span>
                         <ChevronUpIcon
@@ -222,13 +259,25 @@ export function LandingPage() {
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
+                {/* TODO: Add OpenSea */}
+
                 <a className="hover:scale-110 duration-100 ease-in-out">
                   <img src={opensea} alt="opensea" />
                 </a>
-                <a className="hover:scale-110 duration-100 ease-in-out">
+                <a
+                  className="hover:scale-110 duration-100 ease-in-out"
+                  href={`${etherscanBaseURL}/address/${deployments.contracts.SolarSystems.address}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img src={etherscan} alt="etherscan" />
                 </a>
-                <a className="hover:scale-110 duration-100 ease-in-out">
+                <a
+                  href="https://github.com/lbowles/SolarNFT"
+                  className="hover:scale-110 duration-100 ease-in-out"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <img src={github} alt="github" />
                 </a>
               </div>
