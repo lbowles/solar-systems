@@ -59,7 +59,12 @@ export function LandingPage() {
       gasLimit: BigNumber.from("100000"),
     },
   })
-  const { write: mint, data: mintTx } = useContractWrite(mintConfig)
+  const {
+    write: mint,
+    data: mintTx,
+    isLoading: isMintTxLoading,
+    isSuccess: isMintSuccess,
+  } = useContractWrite(mintConfig)
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
@@ -72,6 +77,14 @@ export function LandingPage() {
       console.log("mintTx", mintTx.hash)
     }
   }, [mintTx])
+
+  useEffect(() => {
+    console.log("isMintSuccess", isMintSuccess)
+  }, [isMintSuccess])
+
+  useEffect(() => {
+    console.log("isMintTxLoading", isMintTxLoading)
+  }, [isMintTxLoading])
 
   return (
     <div>
