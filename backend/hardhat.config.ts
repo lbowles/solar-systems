@@ -5,7 +5,7 @@ import "@nomiclabs/hardhat-ethers"
 import "hardhat-deploy"
 import "hardhat-gas-reporter"
 import dotenv from "dotenv"
-import { HardhatNetworkUserConfig } from "hardhat/types"
+import { HardhatNetworkUserConfig, NetworksUserConfig } from "hardhat/types"
 dotenv.config()
 
 // This is a sample Hardhat task. To learn how to create your own go to
@@ -32,6 +32,23 @@ if (process.env.FORK) {
   }
 }
 
+const networks: NetworksUserConfig = {
+  hardhat: hardhatNetwork,
+}
+
+if (process.env.DEFAULT_DEPLOYER_KEY && process.env.INFURA_PROJECT_ID) {
+  networks["goerli"] = {
+    chainId: 5,
+    url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    accounts: [process.env.DEFAULT_DEPLOYER_KEY],
+    verify: {
+      etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY || "",
+      },
+    },
+  }
+}
+
 const config: HardhatUserConfig = {
   solidity: {
     compilers: [
@@ -48,22 +65,7 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  networks: {
-    hardhat: hardhatNetwork,
-    goerli:
-      process.env.DEFAULT_DEPLOYER_KEY && process.env.INFURA_PROJECT_ID
-        ? {
-            chainId: 5,
-            url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-            accounts: [process.env.DEFAULT_DEPLOYER_KEY],
-            verify: {
-              etherscan: {
-                apiKey: process.env.ETHERSCAN_API_KEY || "",
-              },
-            },
-          }
-        : {},
-  },
+  networks,
   typechain: {
     outDir: "types",
     target: "ethers-v5",
