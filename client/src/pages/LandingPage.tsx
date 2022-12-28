@@ -4,7 +4,7 @@ import style from "./LandingPage.module.css"
 import deployments from "../../src/deployments.json"
 import background from ".././img/background.svg"
 import loading from ".././img/loading.svg"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
+import { ConnectButton, useAddRecentTransaction } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
 import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi"
@@ -22,6 +22,8 @@ export function LandingPage() {
   const [mintCount, setMintCount] = useState<number>(1)
 
   const { data: signer, isError, isLoading } = useSigner()
+
+  const addRecentTransaction = useAddRecentTransaction()
 
   const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
@@ -60,6 +62,10 @@ export function LandingPage() {
   useEffect(() => {
     if (mintTx) {
       console.log("mintTx", mintTx.hash)
+      addRecentTransaction({
+        hash: mintTx.hash,
+        description: "Mint SOLARSYSTEM",
+      })
     }
   }, [mintTx])
 
