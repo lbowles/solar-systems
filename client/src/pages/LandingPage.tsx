@@ -25,17 +25,29 @@ export function LandingPage() {
 
   const addRecentTransaction = useAddRecentTransaction()
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -49,9 +61,12 @@ export function LandingPage() {
       value: mintPrice?.mul(mintCount!),
     },
   })
-  const { write: mint, data: mintTx, isLoading: isMintTxLoading, isSuccess: isMintSuccess } = useContractWrite(
-    mintConfig,
-  )
+  const {
+    write: mint,
+    data: mintTx,
+    isLoading: isMintTxLoading,
+    isSuccess: isMintSuccess,
+  } = useContractWrite(mintConfig)
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
