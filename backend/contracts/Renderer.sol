@@ -11,7 +11,6 @@ library Renderer {
     uint256 planetRadius;
     uint256 ringsOffset;
     uint256 orbitRadius;
-    uint256 ringsRadius;
     uint256[3] color;
     uint256 initialAngleDegrees;
     uint256 duration;
@@ -57,8 +56,6 @@ library Renderer {
       utils.uint2str(planet.color[2])
     );
 
-    uint256 ringsRadius = planet.planetRadius + planet.ringsOffset;
-
     // Generate the SVG string
     string memory renderedSVG = string.concat(
       '<circle cx="',
@@ -99,11 +96,10 @@ library Renderer {
       '" fill-opacity="0.8" fill="rgb(',
       colorTuple,
       ')"/>'
-      
-      
     );
 
     if (planet.ringsOffset != 0) {
+      uint256 ringsRadius = planet.planetRadius + planet.ringsOffset;
       renderedSVG = string.concat(
         renderedSVG,
         // Rings
@@ -149,7 +145,7 @@ library Renderer {
   function numRingedPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     uint256 numRingedPlanets;
     for (uint256 i = 0; i < numPlanetsForTokenId(_tokenId); i++) {
-      if (utils.randomRange(_tokenId, string.concat("ringedPlanet", utils.uint2str(i)), 0, 10) == 5) {
+      if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(i)), 0, 10) == 5) {
         numRingedPlanets++;
       }
     }
@@ -221,13 +217,6 @@ library Renderer {
         string.concat("initialAngle", utils.uint2str(i)),
         0,
         360
-      );
-
-      planet.ringsRadius = utils.randomRange(
-        _tokenId,
-        string.concat("ringsRadius", utils.uint2str(i)),
-        0,
-        planet.planetRadius / 2
       );
 
       string memory planetSVG = getOrbitSVG(planet);
