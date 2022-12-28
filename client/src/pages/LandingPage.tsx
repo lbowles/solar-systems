@@ -7,7 +7,14 @@ import loading from ".././img/loading.svg"
 import { ConnectButton, useAddRecentTransaction } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
-import { useAccount, useContractRead, useContractWrite, usePrepareContractWrite, useSigner } from "wagmi"
+import {
+  useAccount,
+  useContractRead,
+  useContractWrite,
+  usePrepareContractWrite,
+  useSigner,
+  useWaitForTransaction,
+} from "wagmi"
 import { BigNumber } from "ethers"
 import { formatEther } from "ethers/lib/utils.js"
 
@@ -63,10 +70,19 @@ export function LandingPage() {
   })
   const {
     write: mint,
-    data: mintTx,
-    isLoading: isMintTxLoading,
-    isSuccess: isMintSuccess,
+    data: mintSignResult,
+    isLoading: isMintSignLoading,
+    isSuccess: isMintSignSuccess,
   } = useContractWrite(mintConfig)
+
+  const {
+    data: mintTx,
+    isError: isMintTxError,
+    isLoading: isMintTxLoading,
+  } = useWaitForTransaction({
+    hash: mintSignResult?.hash,
+    confirmations: 1,
+  })
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
@@ -75,18 +91,26 @@ export function LandingPage() {
   }, [])
 
   useEffect(() => {
-    if (mintTx) {
-      console.log("mintTx", mintTx.hash)
+    if (mintSignResult) {
+      console.log("mintSign", mintSignResult.hash)
       addRecentTransaction({
-        hash: mintTx.hash,
-        description: "Mint SOLARSYSTEM",
+        hash: mintSignResult.hash,
+        description: "Mint Solar System",
       })
     }
-  }, [mintTx])
+  }, [mintSignResult])
 
   useEffect(() => {
-    console.log("isMintSuccess", isMintSuccess)
-  }, [isMintSuccess])
+    console.log("isMintSignSuccess", isMintSignSuccess)
+  }, [isMintSignSuccess])
+
+  useEffect(() => {
+    console.log("isMintSignLoading", isMintSignLoading)
+  }, [isMintSignLoading])
+
+  useEffect(() => {
+    console.log("mintTx", mintTx)
+  }, [mintTx])
 
   useEffect(() => {
     console.log("isMintTxLoading", isMintTxLoading)
@@ -109,37 +133,70 @@ export function LandingPage() {
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="text-size-xs">{`${totalSupply}/${maxSupply}`} minted</p>
       </div>
-      <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
-        <button
-          className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
-          onClick={() => setMintCount(Math.max(mintCount - 1, 1))}
-        >
-          –
-        </button>
-        <button
-          className={style.claimBtn}
-          disabled={signer ? false : true}
-          onClick={() => {
-            mint?.()
-          }}
-        >
-          {!isMintTxLoading ? (
-            "Mint " + mintCount + " for " + formatEther(mintPrice!.mul(mintCount!)) + " Ξ"
-          ) : (
-            <>
+      {mintPrice && maxSupply && totalSupply && (
+        <div className="flex justify-center alignw-screen mt-6 z-1 pl-10 pr-10 z-10 relative">
+          {isMintSignLoading ? (
+            <button className={style.claimBtn}>
               <div className="flex flex-row">
-                <img src={loading} className="animate-spin w-4"></img>‎ Loading
+                <img src={loading} className="animate-spin w-4"></img>‎ Confirm in wallet
               </div>
-            </>
+            </button>
+          ) : isMintTxLoading ? (
+            <a
+              href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
+                mintSignResult?.hash
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex justify-center"
+            >
+              <button className={style.claimBtn}>
+                <div className="flex flex-row">
+                  <img src={loading} className="animate-spin w-4"></img>‎ Transaction pending
+                </div>
+              </button>
+            </a>
+          ) : (
+            <div>
+              <button
+                className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
+                onClick={() => setMintCount(Math.max(mintCount - 1, 1))}
+              >
+                –
+              </button>
+              <button
+                className={style.claimBtn}
+                disabled={signer && maxSupply && totalSupply && maxSupply.gt(totalSupply) ? false : true}
+                onClick={() => {
+                  mint?.()
+                }}
+              >
+                {maxSupply.gt(totalSupply)
+                  ? `Mint ${mintCount} for ${formatEther(mintPrice.mul(mintCount))} Ξ`
+                  : "Sold out"}
+              </button>
+              <button
+                className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
+                onClick={() => setMintCount(mintCount + 1)}
+              >
+                +
+              </button>
+            </div>
           )}
-        </button>
-        <button
-          className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
-          onClick={() => setMintCount(mintCount + 1)}
+        </div>
+      )}
+      {mintTx && (
+        <a
+          href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
+            mintTx.transactionHash
+          }`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex justify-center"
         >
-          +
-        </button>
-      </div>
+          View transaction
+        </a>
+      )}
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Welcome to the Solar System NFT landing page!</p>
       </div>

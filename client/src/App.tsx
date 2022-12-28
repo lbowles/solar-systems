@@ -36,6 +36,7 @@ function App() {
   return (
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider
+        showRecentTransactions={true}
         chains={chains}
         theme={{
           ...lightTheme(),
