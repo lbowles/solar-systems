@@ -3,6 +3,7 @@ import { getSVG } from "../util/sample"
 import style from "./LandingPage.module.css"
 import deployments from "../../src/deployments.json"
 import background from ".././img/background.svg"
+import loading from ".././img/loading.svg"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
@@ -22,29 +23,17 @@ export function LandingPage() {
 
   const { data: signer, isError, isLoading } = useSigner()
 
-  const {
-    data: mintPrice,
-    isError: isMintPriceError,
-    isLoading: isMintPriceLoading,
-  } = useContractRead({
+  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const {
-    data: maxSupply,
-    isError: isMaxSupplyError,
-    isLoading: isMaxSupplyLoading,
-  } = useContractRead({
+  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const {
-    data: totalSupply,
-    isError: isTotalSupplyError,
-    isLoading: isTotalSupplyLoading,
-  } = useContractRead({
+  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -58,12 +47,9 @@ export function LandingPage() {
       value: mintPrice?.mul(mintCount!),
     },
   })
-  const {
-    write: mint,
-    data: mintTx,
-    isLoading: isMintTxLoading,
-    isSuccess: isMintSuccess,
-  } = useContractWrite(mintConfig)
+  const { write: mint, data: mintTx, isLoading: isMintTxLoading, isSuccess: isMintSuccess } = useContractWrite(
+    mintConfig,
+  )
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
@@ -116,7 +102,15 @@ export function LandingPage() {
             mint?.()
           }}
         >
-          Mint {mintCount} for {formatEther(mintPrice!.mul(mintCount!))} Ξ
+          {!isMintTxLoading ? (
+            "Mint " + mintCount + " for " + formatEther(mintPrice!.mul(mintCount!)) + " Ξ"
+          ) : (
+            <>
+              <div className="flex flex-row">
+                <img src={loading} className="animate-spin w-4"></img>‎ Loading
+              </div>
+            </>
+          )}
         </button>
         <button
           className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
