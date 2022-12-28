@@ -22,17 +22,29 @@ export function LandingPage() {
 
   const { data: signer, isError, isLoading } = useSigner()
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -47,13 +59,19 @@ export function LandingPage() {
       gasLimit: BigNumber.from("100000"),
     },
   })
-  const { write: mint } = useContractWrite(mintConfig)
+  const { write: mint, data: mintTx } = useContractWrite(mintConfig)
 
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
     const url = URL.createObjectURL(svg)
     setHeroSVG(url)
   }, [])
+
+  useEffect(() => {
+    if (mintTx) {
+      console.log("mintTx", mintTx.hash)
+    }
+  }, [mintTx])
 
   return (
     <div>
