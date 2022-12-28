@@ -20,8 +20,6 @@ import {
 } from "wagmi"
 import { BigNumber } from "ethers"
 import { formatEther } from "ethers/lib/utils.js"
-import { Disclosure, Transition } from "@headlessui/react"
-import { ChevronUpIcon } from "@heroicons/react/20/solid"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -39,29 +37,17 @@ export function LandingPage() {
 
   const addRecentTransaction = useAddRecentTransaction()
 
-  const {
-    data: mintPrice,
-    isError: isMintPriceError,
-    isLoading: isMintPriceLoading,
-  } = useContractRead({
+  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const {
-    data: maxSupply,
-    isError: isMaxSupplyError,
-    isLoading: isMaxSupplyLoading,
-  } = useContractRead({
+  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const {
-    data: totalSupply,
-    isError: isTotalSupplyError,
-    isLoading: isTotalSupplyLoading,
-  } = useContractRead({
+  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -82,11 +68,7 @@ export function LandingPage() {
     isSuccess: isMintSignSuccess,
   } = useContractWrite(mintConfig)
 
-  const {
-    data: mintTx,
-    isError: isMintTxError,
-    isLoading: isMintTxLoading,
-  } = useWaitForTransaction({
+  const { data: mintTx, isError: isMintTxError, isLoading: isMintTxLoading } = useWaitForTransaction({
     hash: mintSignResult?.hash,
     confirmations: 1,
   })
@@ -94,7 +76,8 @@ export function LandingPage() {
   const copy = [
     {
       heading: "What are Solar Systems?",
-      body: "Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is limited to 1,000 Solar Systems.",
+      body:
+        "Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is limited to 1,000 Solar Systems.",
     },
     {
       heading: "Features",
@@ -232,30 +215,45 @@ export function LandingPage() {
         </a>
       )}
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
-        <p className="font-bold">Welcome to the Solar System NFT landing page!</p>
+        <p className="font-bold">Fully on-chain, procedurally generated, animated solar systems.</p>
       </div>
       <div className="flex justify-center alignw-screen mt-10 z-1 pl-10 pr-10 relative">
         <div className="block bg-white border border-gray-100 rounded-lg shadow-md w-[450px]">
-          <div className="w-100 p-5">
-            {copy.map((items, index) => {
-              return (
-                <Disclosure as="div" className={index === 1 ? "mt-3" : ""}>
-                  {({ open }) => (
-                    <>
-                      {/* TODO: All open by default. Use formatting in body (lists, links etc) */}
-                      <Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-100 px-4 py-2 text-left text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                        <span>{items.heading}</span>
-                        <ChevronUpIcon
-                          className={`${open ? "rotate-360 transform" : "rotate-180"} h-5 w-5 text-gray-800`}
-                        />
-                      </Disclosure.Button>
-                      <Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">{items.body}</Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
-              )
-            })}
+          <div className="w-100 px-5 pt-5">
+            <p className="font- text-xl pb-4">FAQ</p>
+            <div className="block bg-gray-100 px-3 py-2 rounded-lg w-100 text-sm text-gray-900 ">
+              <span>What are Solar Systems?</span>
+            </div>
+            <p className="text-sm text-gray-500 px-3 pt-3 pb-5">
+              Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting
+              around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is
+              limited to 1,000 Solar Systems.
+            </p>
+            <div className="block bg-gray-100 px-3 py-2 rounded-lg w-100 text-sm text-gray-900 mt-1">
+              <span>Features</span>
+            </div>
+            <p className="text-sm text-gray-500 px-3 pt-3 pb-5">
+              Each Solar System is
+              <ul className="space-y-2 mt-2  list-disc list-inside ml-3">
+                <li>
+                  <span className="text-gray-500 font-bold">Procedurally generated.</span> This means that the solar
+                  systems are generated using a set of rules or procedures, rather than being created manually or
+                  pre-designed. This makes each solar system fully unique.
+                </li>
+                <li>
+                  <a href={`${etherscanBaseURL}/address/${deployments.contracts.Renderer.address}`}>
+                    <span className="text-gray-500 font-bold underline hover:text-blue-900">Fully on-chain</span>
+                  </a>
+                  . This means that your NFT will exist for as long as the Ethereum blockchain is around.
+                </li>
+                <li>
+                  <span className="text-gray-500 font-bold">Animated.</span> Planets orbit around a star which add to a
+                  dynamic and lively viewing experience.
+                </li>
+              </ul>
+            </p>
           </div>
+
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
