@@ -73,34 +73,6 @@ export function LandingPage() {
     confirmations: 1,
   })
 
-  const copy = [
-    {
-      heading: "What are Solar Systems?",
-      body:
-        "Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is limited to 1,000 Solar Systems.",
-    },
-    {
-      heading: "Features",
-      body: (
-        <p>
-          Each Solar System is
-          <ul>
-            <li>
-              Procedurally generated. This means that the solar systems are generated using a set of rules or
-              procedures, rather than being created manually or pre-designed. This makes each solar system fully unique.
-            </li>
-            <li>
-              <a href={`${etherscanBaseURL}/address/${deployments.contracts.Renderer.address}`}>
-                Fully on-chain. This means that your NFT will exist for as long as the Ethereum blockchain is around.
-              </a>
-            </li>
-            <li>Animated. Planets orbit around a star which add to a dynamic and lively viewing experience.</li>
-          </ul>
-        </p>
-      ),
-    },
-  ]
-
   useEffect(() => {
     const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
     const url = URL.createObjectURL(svg)
