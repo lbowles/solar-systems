@@ -20,6 +20,11 @@ import {
 } from "wagmi"
 import { BigNumber } from "ethers"
 import { formatEther } from "ethers/lib/utils.js"
+import useSound from "use-sound"
+import successSound from ".././sounds/success.mp3"
+import smallClickSoundUp from ".././sounds/smallClickUp.mp3"
+import smallClickSoundDown from ".././sounds/smallClickDown.mp3"
+import mintClickSound from ".././sounds/mintClickSound.mp3"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -36,6 +41,16 @@ export function LandingPage() {
   const { data: signer, isError, isLoading } = useSigner()
 
   const addRecentTransaction = useAddRecentTransaction()
+
+  const [playbackRate, setPlaybackRate] = useState(0.75)
+
+  const [playSuccess] = useSound(successSound)
+  const [playSmallClickUp] = useSound(smallClickSoundUp)
+  const [playSmallClickDown] = useSound(smallClickSoundDown, {
+    playbackRate,
+    interrupt: true,
+  })
+  const [playMintClick] = useSound(mintClickSound)
 
   const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
     ...solarSystemsConfig,
@@ -99,6 +114,9 @@ export function LandingPage() {
 
   useEffect(() => {
     console.log("mintTx", mintTx)
+    if (mintTx) {
+      playSuccess()
+    }
   }, [mintTx])
 
   useEffect(() => {
@@ -149,7 +167,10 @@ export function LandingPage() {
             <div>
               <button
                 className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
-                onClick={() => setMintCount(Math.max(mintCount - 1, 1))}
+                onClick={() => {
+                  setMintCount(Math.max(mintCount - 1, 1))
+                  playSmallClickDown()
+                }}
               >
                 –
               </button>
@@ -158,6 +179,7 @@ export function LandingPage() {
                 disabled={signer && maxSupply && totalSupply && maxSupply.gt(totalSupply) ? false : true}
                 onClick={() => {
                   mint?.()
+                  playMintClick()
                 }}
               >
                 {maxSupply.gt(totalSupply)
@@ -166,7 +188,10 @@ export function LandingPage() {
               </button>
               <button
                 className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
-                onClick={() => setMintCount(mintCount + 1)}
+                onClick={() => {
+                  setMintCount(mintCount + 1)
+                  playSmallClickUp()
+                }}
               >
                 +
               </button>
