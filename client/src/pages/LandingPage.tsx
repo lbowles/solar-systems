@@ -22,9 +22,9 @@ import { BigNumber } from "ethers"
 import { formatEther } from "ethers/lib/utils.js"
 import useSound from "use-sound"
 import successSound from ".././sounds/success.mp3"
-import smallClickSoundUp from ".././sounds/smallClickUp.mp3"
-import smallClickSoundDown from ".././sounds/smallClickDown.mp3"
+import smallClickSound from ".././sounds/smallClick.mp3"
 import mintClickSound from ".././sounds/mintClickSound.mp3"
+import generalClickSound from ".././sounds/generalClickSound.mp3"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -54,12 +54,26 @@ export function LandingPage() {
   const [playbackRate, setPlaybackRate] = useState(0.75)
 
   const [playSuccess] = useSound(successSound)
-  const [playSmallClickUp] = useSound(smallClickSoundUp)
-  const [playSmallClickDown] = useSound(smallClickSoundDown, {
+
+  const [playGeneralClick] = useSound(generalClickSound)
+
+  // const [playSmallClickUp] = useSound()
+
+  const [playSmallClick] = useSound(smallClickSound, {
     playbackRate,
     interrupt: true,
   })
+
   const [playMintClick] = useSound(mintClickSound)
+
+  const handleAmountClickUp = () => {
+    setPlaybackRate(playbackRate + 0.4)
+    playSmallClick()
+  }
+  const handleAmountClickDown = () => {
+    if (mintCount > 1) setPlaybackRate(playbackRate - 0.4)
+    playSmallClick()
+  }
 
   const {
     data: mintPrice,
@@ -131,6 +145,9 @@ export function LandingPage() {
 
   useEffect(() => {
     console.log("isMintSignSuccess", isMintSignSuccess)
+    if (isMintSignSuccess) {
+      playMintClick()
+    }
   }, [isMintSignSuccess])
 
   useEffect(() => {
@@ -199,7 +216,7 @@ export function LandingPage() {
                 className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
                 onClick={() => {
                   setMintCount(Math.max(mintCount - 1, 1))
-                  playSmallClickDown()
+                  handleAmountClickDown()
                 }}
               >
                 –
@@ -209,7 +226,7 @@ export function LandingPage() {
                 disabled={signer && maxSupply && totalSupply && maxSupply.gt(totalSupply) ? false : true}
                 onClick={() => {
                   mint?.()
-                  playMintClick()
+                  playGeneralClick()
                 }}
               >
                 {maxSupply.gt(totalSupply)
@@ -220,7 +237,7 @@ export function LandingPage() {
                 className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
                 onClick={() => {
                   setMintCount(mintCount + 1)
-                  playSmallClickUp()
+                  handleAmountClickUp()
                 }}
               >
                 +
@@ -304,13 +321,17 @@ export function LandingPage() {
               </ul>
             </p>
           </div>
-
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
                 {/* TODO: Add OpenSea */}
 
-                <a className="hover:scale-110 duration-100 ease-in-out">
+                <a
+                  className="hover:scale-110 duration-100 ease-in-out"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
+                >
                   <img src={opensea} alt="opensea" />
                 </a>
                 <a
@@ -318,6 +339,9 @@ export function LandingPage() {
                   href={`${etherscanBaseURL}/address/${deployments.contracts.SolarSystems.address}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
                 >
                   <img src={etherscan} alt="etherscan" />
                 </a>
@@ -326,6 +350,9 @@ export function LandingPage() {
                   className="hover:scale-110 duration-100 ease-in-out"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
                 >
                   <img src={github} alt="github" />
                 </a>
@@ -334,7 +361,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <div className="flex justify-center alignw-screen mt-24 z-1 pl-10 pr-10 z-10 relative">
         <footer className="sticky w-full py-4  bottom-0 text-center text-gray-700 text-sm">
           Made by{" "}
