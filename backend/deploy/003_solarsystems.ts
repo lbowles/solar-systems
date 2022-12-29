@@ -56,6 +56,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     },
     args: [name, symbol, ethers.utils.parseEther("0.01"), 1000, renderer.address],
     autoMine: true, // speed up deployment on local network (ganache, hardhat), no effect on live networks
+    gasPrice: ethers.utils.parseUnits("17", "gwei"),
   })
 }
 export default func

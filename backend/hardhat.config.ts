@@ -38,10 +38,20 @@ const networks: NetworksUserConfig = {
 }
 
 if (process.env.DEFAULT_DEPLOYER_KEY && process.env.INFURA_PROJECT_ID) {
-  console.log(process.env.DEFAULT_DEPLOYER_KEY)
   networks["goerli"] = {
     chainId: 5,
     url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    accounts: [process.env.DEFAULT_DEPLOYER_KEY],
+    verify: {
+      etherscan: {
+        apiKey: process.env.ETHERSCAN_API_KEY || "",
+      },
+    },
+  }
+
+  networks["mainnet"] = {
+    chainId: 1,
+    url: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
     accounts: [process.env.DEFAULT_DEPLOYER_KEY],
     verify: {
       etherscan: {

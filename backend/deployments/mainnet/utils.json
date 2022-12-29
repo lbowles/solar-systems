@@ -1,0 +1,40 @@
+{
+  "address": "0x78b005A56b91bE61c7d988b346F69233e81E4e4F",
+  "abi": [],
+  "transactionHash": "0xa0e1d5199f44802efb7fa81141ada8a97532ee6936f9613eae9e8c47a13f7c19",
+  "receipt": {
+    "to": null,
+    "from": "0xCC78016816633528Dd4918746D7F016563Ce27FA",
+    "contractAddress": "0x78b005A56b91bE61c7d988b346F69233e81E4e4F",
+    "transactionIndex": 168,
+    "gasUsed": "72281",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xce30c0bded34a92a100bff6b7cea33a7f28360c7f077bbfbba11b65d3d64a6fc",
+    "transactionHash": "0xa0e1d5199f44802efb7fa81141ada8a97532ee6936f9613eae9e8c47a13f7c19",
+    "logs": [],
+    "blockNumber": 16290976,
+    "cumulativeGasUsed": "12871253",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "7a1a69b79dcdafcd626e3419772fe7f5",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.16+commit.07a7930e\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/Utilities.sol\":\"utils\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"contracts/Utilities.sol\":{\"content\":\"//SPDX-License-Identifier: MIT\\npragma solidity ^0.8.12;\\n\\n// Core utils used extensively to format CSS and numbers.\\nlibrary utils {\\n  function random(string memory input) internal pure returns (uint256) {\\n    return uint256(keccak256(abi.encodePacked(input)));\\n  }\\n\\n  function randomRange(\\n    uint256 tokenId,\\n    string memory keyPrefix,\\n    uint256 lower,\\n    uint256 upper\\n  ) internal pure returns (uint256) {\\n    uint256 rand = random(string(abi.encodePacked(keyPrefix, uint2str(tokenId))));\\n    return (rand % (upper - lower)) + lower;\\n  }\\n\\n  function min(uint256 a, uint256 b) internal pure returns (uint256) {\\n    return a < b ? a : b;\\n  }\\n\\n  // converts an unsigned integer to a string\\n  function uint2str(uint256 _i) internal pure returns (string memory _uintAsString) {\\n    if (_i == 0) {\\n      return \\\"0\\\";\\n    }\\n    uint256 j = _i;\\n    uint256 len;\\n    while (j != 0) {\\n      len++;\\n      j /= 10;\\n    }\\n    bytes memory bstr = new bytes(len);\\n    uint256 k = len;\\n    while (_i != 0) {\\n      k = k - 1;\\n      uint8 temp = (48 + uint8(_i - (_i / 10) * 10));\\n      bytes1 b1 = bytes1(temp);\\n      bstr[k] = b1;\\n      _i /= 10;\\n    }\\n    return string(bstr);\\n  }\\n}\\n\",\"keccak256\":\"0xe694910e765b3804915b600a0b52452c4dccfeef7ff39b562da2376484d666c1\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220ba5bd823f655c3c8e706bc719b510c922291e37b05dad229b9220841d79d34f264736f6c63430008100033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220ba5bd823f655c3c8e706bc719b510c922291e37b05dad229b9220841d79d34f264736f6c63430008100033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
