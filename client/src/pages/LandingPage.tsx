@@ -289,7 +289,7 @@ export function LandingPage() {
                     &nbsp;
                   </span>
                 )
-              })}{" "}
+              })}
               ]
             </div>
           </div>
