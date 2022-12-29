@@ -35,7 +35,7 @@ describe("SolarSystems", function () {
 
   it("Should return the correct token URI for a given token ID", async function () {
     const tokenId = 1
-    const name = "SolarSystems #" + tokenId
+    const name = "Solar System #" + tokenId
     const description = "Fully on-chain, procedurally generated, animated solar systems."
     const svg = await solarSystems.tokenURI(tokenId)
 
