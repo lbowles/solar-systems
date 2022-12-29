@@ -1,5 +1,4 @@
 import { SolarSystems, SolarSystems__factory } from "../../../backend/types"
-import { getSVG } from "../util/sample"
 import style from "./LandingPage.module.css"
 import deployments from "../../src/deployments.json"
 import background from ".././img/background.svg"
@@ -7,6 +6,7 @@ import loading from ".././img/loading.svg"
 import opensea from ".././img/opensea.svg"
 import github from ".././img/github.svg"
 import etherscan from ".././img/etherscan.svg"
+import demoSolarSystem from ".././img/demoSolarSystem.svg"
 import { ConnectButton, useAddRecentTransaction } from "@rainbow-me/rainbowkit"
 import { useEffect, useState } from "react"
 import { prepareWriteContract, writeContract } from "@wagmi/core"
@@ -41,8 +41,6 @@ function getOpenSeaLink(tokenId: string | number) {
 }
 
 export function LandingPage() {
-  const [heroSVG, setHeroSVG] = useState<string>()
-
   const [mintCount, setMintCount] = useState<number>(1)
 
   const [mintedTokens, setMintedTokens] = useState<number[]>([])
@@ -128,12 +126,6 @@ export function LandingPage() {
   })
 
   useEffect(() => {
-    const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
-    const url = URL.createObjectURL(svg)
-    setHeroSVG(url)
-  }, [])
-
-  useEffect(() => {
     if (mintSignResult) {
       console.log("mintSign", mintSignResult.hash)
       addRecentTransaction({
@@ -173,7 +165,7 @@ export function LandingPage() {
   return (
     <div>
       <div className="flex justify-center alignw-screen w-screen max-w-screen overflow-hidden">
-        <img src={heroSVG} className="mt-[195px]"></img>
+        <img src={demoSolarSystem} className="mt-[195px]"></img>
       </div>
       <div className="flex justify-between p-10  absolute w-full top-0">
         <h3 className="text-base font-bold">SOLAR SYSTEMS</h3>
