@@ -36,7 +36,9 @@ const rendererConfig = {
   abi: deployments.contracts.Renderer.abi,
 }
 
-const etherscanBaseURL = `https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io`
+function getEtherscanBaseURL(chainId: string) {
+  return `https://${chainId !== "1" ? "goerli." : ""}etherscan.io`
+}
 
 function getOpenSeaLink(tokenId: string | number) {
   const development = process.env.NODE_ENV === "development"
@@ -44,6 +46,8 @@ function getOpenSeaLink(tokenId: string | number) {
     deployments.contracts.SolarSystems.address
   }/${tokenId}`
 }
+
+const etherscanBaseURL = getEtherscanBaseURL(deployments.chainId)
 
 export function LandingPage() {
   const [mintCount, setMintCount] = useState<number>(1)
@@ -198,9 +202,7 @@ export function LandingPage() {
             </button>
           ) : isMintTxLoading ? (
             <a
-              href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
-                mintSignResult?.hash
-              }`}
+              href={`${etherscanBaseURL}/tx/${mintSignResult?.hash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex justify-center"
@@ -255,9 +257,7 @@ export function LandingPage() {
           <div className="flex justify-center alignw-screen mt-3 z-1 pl-10 pr-10 z-10 relative  h-4">
             <div>
               <a
-                href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
-                  mintTx.transactionHash
-                }`}
+                href={`${etherscanBaseURL}/tx/${mintTx.transactionHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex justify-center text-xs hover:text-blue-900"
@@ -307,7 +307,7 @@ export function LandingPage() {
               <span>What are Solar Systems?</span>
             </div>
             <p className="text-sm text-gray-500 px-3 pt-3 pb-5">
-              Solar Systems are a fully on-chain NFT collection which features procedurally generated planets orbiting
+              Solar Systems is a fully on-chain NFT collection which features procedurally generated planets orbiting
               around a star. Each Solar System is unique and can be minted for the price of 0.01 ETH. The collection is
               limited to 1,000 Solar Systems.
             </p>
