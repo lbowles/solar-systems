@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://onchainsolar.systems",
   "dependencies": {
     "@rainbow-me/rainbowkit": "^0.8.1",
     "@testing-library/jest-dom": "^5.14.1",
@@ -12,6 +13,7 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "ethers": "^5.7.2",
+    "gh-pages": "^4.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -21,6 +23,8 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
+    "deploy": "gh-pages -d build",
+    "predeploy": "yarn run build",
     "prestart": "echo \"declare const schema: $(cat src/deployments.json); export default schema;\" > src/deployments.json.d.ts",
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
