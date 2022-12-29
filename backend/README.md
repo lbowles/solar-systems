@@ -3,7 +3,7 @@
 ### Run node and export ABIs
 
 ```
-yarn hardhat node --export ../client/src/deployments.json --network localhost
+yarn start
 ```
 
 Use `FORK=mainnet` to fork mainnet on the localhost network.
@@ -11,19 +11,21 @@ Use `FORK=mainnet` to fork mainnet on the localhost network.
 ### Tests
 
 ```
-npx hardhat test
+yarn hardhat test
 ```
 
 ### Deployment
 
 ```
-npx hardhat deploy
+yarn hardhat deploy
 ```
+
+Optionally specify network with `--network <network>`
 
 ### Generate types
 
 ```
-npx hardhat typechain
+yarn hardhat typechain
 ```
 
 ### Development

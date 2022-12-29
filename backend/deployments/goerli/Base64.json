@@ -1,0 +1,43 @@
+{
+  "address": "0x414687A002918F0D9822234FAe93D950d6e8e773",
+  "abi": [],
+  "transactionHash": "0xaadd6ab2d8bab0146f968963d880788f664d37a3e1f17f7311fd02cd2dd1a8e4",
+  "receipt": {
+    "to": null,
+    "from": "0xCC78016816633528Dd4918746D7F016563Ce27FA",
+    "contractAddress": "0x414687A002918F0D9822234FAe93D950d6e8e773",
+    "transactionIndex": 48,
+    "gasUsed": "72281",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xd6778430579ec0013b25d2348c1ba5789ec47e05c99fcdac34c76a18fbcd9968",
+    "transactionHash": "0xaadd6ab2d8bab0146f968963d880788f664d37a3e1f17f7311fd02cd2dd1a8e4",
+    "logs": [],
+    "blockNumber": 8216007,
+    "cumulativeGasUsed": "7519081",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "fcdb7507849fc93c0dece938e72d06c7",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.12+commit.f00d7308\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"author\":\"Brecht Devos <brecht@loopring.org>\",\"kind\":\"dev\",\"methods\":{},\"title\":\"Base64\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"[MIT License]Provides a function for encoding some bytes in base64\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"svgnft/contracts/Base64.sol\":\"Base64\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"svgnft/contracts/Base64.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.2;\\n\\n/// [MIT License]\\n/// @title Base64\\n/// @notice Provides a function for encoding some bytes in base64\\n/// @author Brecht Devos <brecht@loopring.org>\\nlibrary Base64 {\\n  bytes internal constant TABLE = \\\"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\\\";\\n\\n  /// @notice Encodes some bytes to the base64 representation\\n  function encode(bytes memory data) internal pure returns (string memory) {\\n    uint256 len = data.length;\\n    if (len == 0) return \\\"\\\";\\n\\n    // multiply by 4/3 rounded up\\n    uint256 encodedLen = 4 * ((len + 2) / 3);\\n\\n    // Add some extra buffer at the end\\n    bytes memory result = new bytes(encodedLen + 32);\\n\\n    bytes memory table = TABLE;\\n\\n    assembly {\\n      let tablePtr := add(table, 1)\\n      let resultPtr := add(result, 32)\\n\\n      for {\\n        let i := 0\\n      } lt(i, len) {\\n\\n      } {\\n        i := add(i, 3)\\n        let input := and(mload(add(data, i)), 0xffffff)\\n\\n        let out := mload(add(tablePtr, and(shr(18, input), 0x3F)))\\n        out := shl(8, out)\\n        out := add(out, and(mload(add(tablePtr, and(shr(12, input), 0x3F))), 0xFF))\\n        out := shl(8, out)\\n        out := add(out, and(mload(add(tablePtr, and(shr(6, input), 0x3F))), 0xFF))\\n        out := shl(8, out)\\n        out := add(out, and(mload(add(tablePtr, and(input, 0x3F))), 0xFF))\\n        out := shl(224, out)\\n\\n        mstore(resultPtr, out)\\n\\n        resultPtr := add(resultPtr, 4)\\n      }\\n\\n      switch mod(len, 3)\\n      case 1 {\\n        mstore(sub(resultPtr, 2), shl(240, 0x3d3d))\\n      }\\n      case 2 {\\n        mstore(sub(resultPtr, 1), shl(248, 0x3d))\\n      }\\n\\n      mstore(result, encodedLen)\\n    }\\n\\n    return string(result);\\n  }\\n}\\n\",\"keccak256\":\"0xe0cf4b1dfbce881f759d02a1ae0148ed25ca0fd8fd1ca4b14fd58479095b80b8\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200fb6afb4017214bdac845caccde42a1e904a0904fbaf4e976acaa42f4bf1177964736f6c634300080c0033",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200fb6afb4017214bdac845caccde42a1e904a0904fbaf4e976acaa42f4bf1177964736f6c634300080c0033",
+  "devdoc": {
+    "author": "Brecht Devos <brecht@loopring.org>",
+    "kind": "dev",
+    "methods": {},
+    "title": "Base64",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "notice": "[MIT License]Provides a function for encoding some bytes in base64",
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}

@@ -50,9 +50,9 @@ describe("SolarSystems", function () {
     expect(json.attributes).to.have.lengthOf(3)
 
     expect(json.attributes[0]["trait_type"]).to.equal("Planets")
-    expect(json.attributes[0]["value"]).to.be.greaterThan(0)
+    expect(parseInt(json.attributes[0]["value"])).to.be.greaterThan(0)
     expect(json.attributes[1]["trait_type"]).to.equal("Ringed Planets")
-    expect(json.attributes[1]["value"]).to.be.greaterThanOrEqual(0)
+    expect(parseInt(json.attributes[1]["value"])).to.be.greaterThanOrEqual(0)
     expect(json.attributes[2]["trait_type"]).to.equal("Star Type")
     expect(json.attributes[2]["value"]).to.be.a.string
   })

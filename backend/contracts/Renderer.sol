@@ -11,7 +11,6 @@ library Renderer {
     uint256 planetRadius;
     uint256 ringsOffset;
     uint256 orbitRadius;
-    uint256 ringsRadius;
     uint256[3] color;
     uint256 initialAngleDegrees;
     uint256 duration;
@@ -47,6 +46,11 @@ library Renderer {
     return (newX, newY);
   }
 
+
+  /**
+  * @notice Gets the SVG representation of a planet's orbit.
+  * @param planet The planet to generate the SVG for.
+  */
   function getOrbitSVG(Planet memory planet) public pure returns (string memory) {
     uint256 halfCanvasWidth = SIZE / 2;
 
@@ -64,8 +68,6 @@ library Renderer {
       ",",
       utils.uint2str(planet.color[2])
     );
-
-    uint256 ringsRadius = planet.planetRadius + planet.ringsOffset;
 
     // Generate the SVG string
     string memory renderedSVG = string.concat(
@@ -107,11 +109,10 @@ library Renderer {
       '" fill-opacity="0.8" fill="rgb(',
       colorTuple,
       ')"/>'
-      
-      
     );
 
     if (planet.ringsOffset != 0) {
+      uint256 ringsRadius = planet.planetRadius + planet.ringsOffset;
       renderedSVG = string.concat(
         renderedSVG,
         // Rings
@@ -150,24 +151,40 @@ library Renderer {
     return renderedSVG;
   }
 
+  /**
+  * @notice Gets the number of planets in a solar system.
+  * @param _tokenId The token ID of the solar system to get the number of planets for.
+  */
   function numPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     return utils.randomRange(_tokenId, "numPlanets", 1, 6);
   }
 
+  /**
+  * @notice Gets the number of ringed planets in a solar system.
+  * @param _tokenId The token ID of the solar system to get the number of ringed planets for.
+  */
   function numRingedPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     uint256 numRingedPlanets;
     for (uint256 i = 0; i < numPlanetsForTokenId(_tokenId); i++) {
-      if (utils.randomRange(_tokenId, string.concat("ringedPlanet", utils.uint2str(i)), 0, 10) == 5) {
+      if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(i)), 0, 10) == 5) {
         numRingedPlanets++;
       }
     }
     return numRingedPlanets;
   }
 
+  /**
+  * @notice Determines if a solar system has a rare star.
+  * @param _tokenId The token ID of the solar system to check.
+  */
   function hasRareStarForTokenId(uint256 _tokenId) internal pure returns (bool) {
     return utils.randomRange(_tokenId, "rareStar", 0, 10) == 5;
   }
 
+  /**
+  * @notice Gets the SVG representation of a solar system.
+  * @param _tokenId The token ID of the solar system to generate the SVG for.
+  */
   function planetForTokenId(uint256 _tokenId, uint256 _index, uint256 planetRadiusLowerBound, uint256 planetRadiusUpperBound,  uint256 radiusInterval) private pure returns (Planet memory planet) {
     if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(_index)), 0, 10) == 5) {
         planet.ringsOffset = 4;
@@ -192,13 +209,6 @@ library Renderer {
         string.concat("initialAngle", utils.uint2str(_index)),
         0,
         360
-      );
-
-      planet.ringsRadius = utils.randomRange(
-        _tokenId,
-        string.concat("ringsRadius", utils.uint2str(_index)),
-        0,
-        planet.planetRadius / 2
       );
   }
 
