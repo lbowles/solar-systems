@@ -24,6 +24,7 @@ import useSound from "use-sound"
 import successSound from ".././sounds/success.mp3"
 import smallClickSound from ".././sounds/smallClick.mp3"
 import mintClickSound from ".././sounds/mintClickSound.mp3"
+import generalClickSound from ".././sounds/generalClickSound.mp3"
 
 const solarSystemsConfig = {
   address: deployments.contracts.SolarSystems.address,
@@ -44,6 +45,8 @@ export function LandingPage() {
   const [playbackRate, setPlaybackRate] = useState(0.75)
 
   const [playSuccess] = useSound(successSound)
+
+  const [playGeneralClick] = useSound(generalClickSound)
 
   // const [playSmallClickUp] = useSound()
 
@@ -209,6 +212,7 @@ export function LandingPage() {
                 disabled={signer && maxSupply && totalSupply && maxSupply.gt(totalSupply) ? false : true}
                 onClick={() => {
                   mint?.()
+                  playGeneralClick()
                 }}
               >
                 {maxSupply.gt(totalSupply)
@@ -286,7 +290,12 @@ export function LandingPage() {
               <div className=" grid  grid-flow-col gap-3">
                 {/* TODO: Add OpenSea */}
 
-                <a className="hover:scale-110 duration-100 ease-in-out">
+                <a
+                  className="hover:scale-110 duration-100 ease-in-out"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
+                >
                   <img src={opensea} alt="opensea" />
                 </a>
                 <a
@@ -294,6 +303,9 @@ export function LandingPage() {
                   href={`${etherscanBaseURL}/address/${deployments.contracts.SolarSystems.address}`}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
                 >
                   <img src={etherscan} alt="etherscan" />
                 </a>
@@ -302,6 +314,9 @@ export function LandingPage() {
                   className="hover:scale-110 duration-100 ease-in-out"
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
                 >
                   <img src={github} alt="github" />
                 </a>
