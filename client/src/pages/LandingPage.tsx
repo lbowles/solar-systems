@@ -343,8 +343,10 @@ export function LandingPage() {
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
-                {/* TODO: Add OpenSea */}
                 <a
+                  href="https://opensea.io/collection/onchain-solarsystems"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:scale-110 duration-100 ease-in-out"
                   onClick={() => {
                     playGeneralClick()
