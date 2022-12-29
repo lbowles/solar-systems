@@ -145,7 +145,7 @@ export function LandingPage() {
 
   useEffect(() => {
     if (mintSignResult) {
-      console.log("mintSign", mintSignResult.hash)
+      // console.log("mintSign", mintSignResult.hash)
       addRecentTransaction({
         hash: mintSignResult.hash,
         description: "Mint Solar System",
@@ -154,18 +154,14 @@ export function LandingPage() {
   }, [mintSignResult])
 
   useEffect(() => {
-    console.log("isMintSignSuccess", isMintSignSuccess)
+    // console.log("isMintSignSuccess", isMintSignSuccess)
     if (isMintSignSuccess) {
       playMintClick()
     }
   }, [isMintSignSuccess])
 
   useEffect(() => {
-    console.log("isMintSignLoading", isMintSignLoading)
-  }, [isMintSignLoading])
-
-  useEffect(() => {
-    console.log("mintTx", mintTx)
+    // console.log("mintTx", mintTx)
     if (mintTx) {
       playSuccess()
       const tokenIds = mintTx.logs.map((log) => {
@@ -175,10 +171,6 @@ export function LandingPage() {
       setMintedTokens(tokenIds)
     }
   }, [mintTx])
-
-  useEffect(() => {
-    console.log("isMintTxLoading", isMintTxLoading)
-  }, [isMintTxLoading])
 
   return (
     <div>
@@ -314,7 +306,7 @@ export function LandingPage() {
             <div className="block bg-gray-100 px-3 py-2 rounded-lg w-100 text-sm text-gray-900 mt-1">
               <span>Features</span>
             </div>
-            <p className="text-sm text-gray-500 px-3 pt-3 pb-5">
+            <div className="text-sm text-gray-500 px-3 pt-3 pb-5">
               Each Solar System is
               <ul className="space-y-2 mt-2  list-disc list-inside ml-3">
                 <li>
@@ -338,7 +330,7 @@ export function LandingPage() {
                   dynamic and lively viewing experience.
                 </li>
               </ul>
-            </p>
+            </div>
           </div>
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
