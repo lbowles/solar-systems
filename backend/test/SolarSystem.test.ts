@@ -26,7 +26,7 @@ describe("SolarSystems", function () {
     await solarSystems.connect(signers[0]).mint(1, { value: mintPrice })
     const finalSupply = await solarSystems.totalSupply()
     expect(finalSupply).to.equal(initialSupply.add(1))
-    expect(await solarSystems.ownerOf(initialSupply)).to.equal(signers[0].address)
+    expect(await solarSystems.ownerOf(finalSupply)).to.equal(signers[0].address)
   })
 
   it("Should not allow minting more NFTs than the max supply", async function () {
@@ -34,6 +34,9 @@ describe("SolarSystems", function () {
   })
 
   it("Should return the correct token URI for a given token ID", async function () {
+    // Mint a new token
+    await solarSystems.mint(1, { value: mintPrice })
+
     const tokenId = 1
     const name = "Solar System #" + tokenId
     const description = "Fully on-chain, procedurally generated, animated solar systems."

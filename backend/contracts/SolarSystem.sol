@@ -92,4 +92,8 @@ contract SolarSystems is ERC721A, Ownable {
   function withdraw() external onlyOwner {
     require(payable(msg.sender).send(address(this).balance));
   }
+
+  function _startTokenId() internal view virtual override returns (uint256) {
+    return 1;
+  }
 }
