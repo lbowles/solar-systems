@@ -172,12 +172,7 @@ export function LandingPage() {
 
   return (
     <div>
-      <div className="flex justify-center alignw-screen">
-        <img
-          className="object-cover top-0 absolute z-0 min-w-[1510px] max-w-[1510px]"
-          src={background}
-          alt="screenshot"
-        ></img>
+      <div className="flex justify-center alignw-screen w-screen max-w-screen overflow-hidden">
         <img src={heroSVG} className="mt-[195px]"></img>
       </div>
       <div className="flex justify-between p-10  absolute w-full top-0">

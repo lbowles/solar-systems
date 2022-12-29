@@ -38,6 +38,7 @@ const networks: NetworksUserConfig = {
 }
 
 if (process.env.DEFAULT_DEPLOYER_KEY && process.env.INFURA_PROJECT_ID) {
+  console.log(process.env.DEFAULT_DEPLOYER_KEY)
   networks["goerli"] = {
     chainId: 5,
     url: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
