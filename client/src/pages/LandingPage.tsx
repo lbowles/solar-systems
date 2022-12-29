@@ -22,8 +22,7 @@ import { BigNumber } from "ethers"
 import { formatEther } from "ethers/lib/utils.js"
 import useSound from "use-sound"
 import successSound from ".././sounds/success.mp3"
-import smallClickSoundUp from ".././sounds/smallClickUp.mp3"
-import smallClickSoundDown from ".././sounds/smallClickDown.mp3"
+import smallClickSound from ".././sounds/smallClick.mp3"
 import mintClickSound from ".././sounds/mintClickSound.mp3"
 
 const solarSystemsConfig = {
@@ -45,24 +44,48 @@ export function LandingPage() {
   const [playbackRate, setPlaybackRate] = useState(0.75)
 
   const [playSuccess] = useSound(successSound)
-  const [playSmallClickUp] = useSound(smallClickSoundUp)
-  const [playSmallClickDown] = useSound(smallClickSoundDown, {
+
+  // const [playSmallClickUp] = useSound()
+
+  const [playSmallClick] = useSound(smallClickSound, {
     playbackRate,
     interrupt: true,
   })
+
   const [playMintClick] = useSound(mintClickSound)
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const handleAmountClickUp = () => {
+    setPlaybackRate(playbackRate + 0.4)
+    playSmallClick()
+  }
+  const handleAmountClickDown = () => {
+    if (mintCount > 1) setPlaybackRate(playbackRate - 0.4)
+    playSmallClick()
+  }
+
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -83,7 +106,11 @@ export function LandingPage() {
     isSuccess: isMintSignSuccess,
   } = useContractWrite(mintConfig)
 
-  const { data: mintTx, isError: isMintTxError, isLoading: isMintTxLoading } = useWaitForTransaction({
+  const {
+    data: mintTx,
+    isError: isMintTxError,
+    isLoading: isMintTxLoading,
+  } = useWaitForTransaction({
     hash: mintSignResult?.hash,
     confirmations: 1,
   })
@@ -106,6 +133,9 @@ export function LandingPage() {
 
   useEffect(() => {
     console.log("isMintSignSuccess", isMintSignSuccess)
+    if (isMintSignSuccess) {
+      playMintClick()
+    }
   }, [isMintSignSuccess])
 
   useEffect(() => {
@@ -169,7 +199,7 @@ export function LandingPage() {
                 className="text-xl font-bold  hover:scale-125 duration-100 ease-in-out"
                 onClick={() => {
                   setMintCount(Math.max(mintCount - 1, 1))
-                  playSmallClickDown()
+                  handleAmountClickDown()
                 }}
               >
                 –
@@ -179,7 +209,6 @@ export function LandingPage() {
                 disabled={signer && maxSupply && totalSupply && maxSupply.gt(totalSupply) ? false : true}
                 onClick={() => {
                   mint?.()
-                  playMintClick()
                 }}
               >
                 {maxSupply.gt(totalSupply)
@@ -190,7 +219,7 @@ export function LandingPage() {
                 className="text-xl font-bold hover:scale-125 duration-100 ease-in-out"
                 onClick={() => {
                   setMintCount(mintCount + 1)
-                  playSmallClickUp()
+                  handleAmountClickUp()
                 }}
               >
                 +
@@ -252,7 +281,6 @@ export function LandingPage() {
               </ul>
             </p>
           </div>
-
           <div className="w-100 bg-slate-900 h-12 -ml-0 -mr-0 translate-y-[1px] rounded-bl-lg rounded-br-lg pt-3">
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
@@ -282,7 +310,6 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-
       <div className="flex justify-center alignw-screen mt-24 z-1 pl-10 pr-10 z-10 relative">
         <footer className="sticky w-full py-4  bottom-0 text-center text-gray-700 text-sm">
           Made by{" "}
