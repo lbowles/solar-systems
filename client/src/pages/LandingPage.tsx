@@ -33,10 +33,19 @@ const solarSystemsConfig = {
 
 const etherscanBaseURL = `https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io`
 
+function getOpenSeaLink(tokenId: string | number) {
+  const development = process.env.NODE_ENV === "development"
+  return `https://${development ? "testnets." : ""}opensea.io/assets/${development ? "goerli/" : ""}${
+    deployments.contracts.SolarSystems.address
+  }/${tokenId}`
+}
+
 export function LandingPage() {
   const [heroSVG, setHeroSVG] = useState<string>()
 
   const [mintCount, setMintCount] = useState<number>(1)
+
+  const [mintedTokens, setMintedTokens] = useState<number[]>([])
 
   const { data: signer, isError, isLoading } = useSigner()
 
@@ -52,17 +61,29 @@ export function LandingPage() {
   })
   const [playMintClick] = useSound(mintClickSound)
 
-  const { data: mintPrice, isError: isMintPriceError, isLoading: isMintPriceLoading } = useContractRead({
+  const {
+    data: mintPrice,
+    isError: isMintPriceError,
+    isLoading: isMintPriceLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "price",
   })
 
-  const { data: maxSupply, isError: isMaxSupplyError, isLoading: isMaxSupplyLoading } = useContractRead({
+  const {
+    data: maxSupply,
+    isError: isMaxSupplyError,
+    isLoading: isMaxSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "maxSupply",
   })
 
-  const { data: totalSupply, isError: isTotalSupplyError, isLoading: isTotalSupplyLoading } = useContractRead({
+  const {
+    data: totalSupply,
+    isError: isTotalSupplyError,
+    isLoading: isTotalSupplyLoading,
+  } = useContractRead({
     ...solarSystemsConfig,
     functionName: "totalSupply",
     watch: true,
@@ -83,7 +104,11 @@ export function LandingPage() {
     isSuccess: isMintSignSuccess,
   } = useContractWrite(mintConfig)
 
-  const { data: mintTx, isError: isMintTxError, isLoading: isMintTxLoading } = useWaitForTransaction({
+  const {
+    data: mintTx,
+    isError: isMintTxError,
+    isLoading: isMintTxLoading,
+  } = useWaitForTransaction({
     hash: mintSignResult?.hash,
     confirmations: 1,
   })
@@ -116,6 +141,11 @@ export function LandingPage() {
     console.log("mintTx", mintTx)
     if (mintTx) {
       playSuccess()
+      const tokenIds = mintTx.logs.map((log) => {
+        const events = SolarSystems__factory.createInterface().decodeEventLog("Transfer", log.data, log.topics)
+        return events.tokenId.toString()
+      })
+      setMintedTokens(tokenIds)
     }
   }, [mintTx])
 
@@ -199,18 +229,40 @@ export function LandingPage() {
           )}
         </div>
       )}
-      {mintTx && (
+      {mintTx && mintTx.status && (
         <div className="flex justify-center alignw-screen mt-1 z-1 pl-10 pr-10 z-10 relative -mb-5 h-4">
-          <a
-            href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
-              mintTx.transactionHash
-            }`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex justify-center text-xs hover:text-blue-900"
-          >
-            View transaction
-          </a>
+          <div>
+            <a
+              href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
+                mintTx.transactionHash
+              }`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex justify-center text-xs hover:text-blue-900"
+            >
+              View transaction
+            </a>
+          </div>
+
+          <div>
+            Minted tokens:[{" "}
+            {mintedTokens.map((tokenId) => {
+              return (
+                <span>
+                  <a
+                    href={getOpenSeaLink(tokenId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs hover:text-blue-900"
+                  >
+                    {tokenId}
+                  </a>
+                  &nbsp;
+                </span>
+              )
+            })}{" "}
+            ]
+          </div>
         </div>
       )}
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
@@ -246,7 +298,7 @@ export function LandingPage() {
                   . This means that your NFT will exist for as long as the Ethereum blockchain is around.
                 </li>
                 <li>
-                  <span className="text-gray-500 font-bold">Animated.</span> Planets orbit around a star which add to a
+                  <span className="text-gray-500 font-bold">Animated.</span> Planets orbit around a star which adds to a
                   dynamic and lively viewing experience.
                 </li>
               </ul>
