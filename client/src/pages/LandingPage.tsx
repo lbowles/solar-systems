@@ -175,16 +175,18 @@ export function LandingPage() {
         </div>
       )}
       {mintTx && (
-        <a
-          href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
-            mintTx.transactionHash
-          }`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex justify-center"
-        >
-          View transaction
-        </a>
+        <div className="flex justify-center alignw-screen mt-1 z-1 pl-10 pr-10 z-10 relative -mb-5 h-4">
+          <a
+            href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
+              mintTx.transactionHash
+            }`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center text-xs hover:text-blue-900"
+          >
+            View transaction
+          </a>
+        </div>
       )}
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Fully on-chain, procedurally generated, animated solar systems.</p>
