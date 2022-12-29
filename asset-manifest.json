@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.4e348e79.css",
-    "main.js": "/static/js/main.253c24eb.js",
+    "main.css": "/static/css/main.a0aae695.css",
+    "main.js": "/static/js/main.006329eb.js",
     "static/js/510.de8b70c0.chunk.js": "/static/js/510.de8b70c0.chunk.js",
     "static/js/89.fbc0622e.chunk.js": "/static/js/89.fbc0622e.chunk.js",
     "static/js/389.4798db35.chunk.js": "/static/js/389.4798db35.chunk.js",
@@ -36,15 +36,16 @@
     "static/media/mintClickSound.mp3": "/static/media/mintClickSound.2114d4aac8909f512a99.mp3",
     "static/media/generalClickSound.mp3": "/static/media/generalClickSound.cf37a5bd4c4227a0df29.mp3",
     "static/media/smallClick.mp3": "/static/media/smallClick.4226279be7a96795d276.mp3",
-    "static/media/background.svg": "/static/media/background.8a32bb6a849e1584596c622d37be08dc.svg",
+    "static/media/background.svg": "/static/media/background.8a32bb6a849e1584596c.svg",
     "static/media/opensea.svg": "/static/media/opensea.99754c7461ee3c216dc14ad0637afd05.svg",
+    "static/media/demoSolarSystem.svg": "/static/media/demoSolarSystem.3c1b572902f9360c955bb4a49d04c1df.svg",
     "static/media/etherscan.svg": "/static/media/etherscan.369d37698e9ae28d5fe2cead98784b3c.svg",
     "static/media/github.svg": "/static/media/github.a9958c8c4f5dc7abcec3fd09c44c3fa5.svg",
     "index.html": "/index.html",
     "static/media/loading.svg": "/static/media/loading.6d28720941160300521ded3191f31b6f.svg"
   },
   "entrypoints": [
-    "static/css/main.4e348e79.css",
-    "static/js/main.253c24eb.js"
+    "static/css/main.a0aae695.css",
+    "static/js/main.006329eb.js"
   ]
 }
