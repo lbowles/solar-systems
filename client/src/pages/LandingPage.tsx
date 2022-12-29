@@ -31,6 +31,11 @@ const solarSystemsConfig = {
   abi: deployments.contracts.SolarSystems.abi,
 }
 
+const rendererConfig = {
+  address: deployments.contracts.Renderer.address,
+  abi: deployments.contracts.Renderer.abi,
+}
+
 const etherscanBaseURL = `https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io`
 
 function getOpenSeaLink(tokenId: string | number) {
@@ -74,6 +79,15 @@ export function LandingPage() {
     if (mintCount > 1) setPlaybackRate(playbackRate - 0.4)
     playSmallClick()
   }
+
+  const [randomTokenId, setRandomTokenId] = useState<number>(Math.round(Math.random() * 10000) + 1001)
+
+  const { data: sampleSvg, isLoading: sampleSvgLoading } = useContractRead({
+    ...rendererConfig,
+    functionName: "render",
+    // Random number
+    args: [BigNumber.from(`${randomTokenId}`)],
+  })
 
   const {
     data: mintPrice,
@@ -127,11 +141,11 @@ export function LandingPage() {
     confirmations: 1,
   })
 
-  useEffect(() => {
-    const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
-    const url = URL.createObjectURL(svg)
-    setHeroSVG(url)
-  }, [])
+  // useEffect(() => {
+  //   const svg = new Blob([getSVG(200)], { type: "image/svg+xml" })
+  //   const url = URL.createObjectURL(svg)
+  //   setHeroSVG(url)
+  // }, [])
 
   useEffect(() => {
     if (mintSignResult) {
@@ -170,10 +184,33 @@ export function LandingPage() {
     console.log("isMintTxLoading", isMintTxLoading)
   }, [isMintTxLoading])
 
+  useEffect(() => {
+    console.log(sampleSvg)
+    if (sampleSvg) {
+      const svg = new Blob([sampleSvg], { type: "image/svg+xml" })
+      const url = URL.createObjectURL(svg)
+      setHeroSVG(url)
+    }
+  }, [sampleSvg])
+
   return (
     <div>
       <div className="flex justify-center alignw-screen w-screen max-w-screen overflow-hidden">
-        <img src={heroSVG} className="mt-[195px]"></img>
+        {heroSVG ? (
+          <img src={heroSVG} width="200px" style={{ borderRadius: "200px" }} className="mt-[195px] "></img>
+        ) : (
+          <div
+            style={{
+              marginTop: "195px",
+              width: "200px",
+              height: "200px",
+              borderRadius: "200px",
+              backgroundColor: "#0D1F2F",
+            }}
+          >
+            <img src={loading} className="animate-spin w-4"></img>‎
+          </div>
+        )}
       </div>
       <div className="flex justify-between p-10  absolute w-full top-0">
         <h3 className="text-base font-bold">SOLAR SYSTEMS</h3>
