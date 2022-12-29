@@ -189,6 +189,9 @@ export function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex justify-center"
+              onClick={() => {
+                playGeneralClick()
+              }}
             >
               <button className={style.claimBtn}>
                 <div className="flex flex-row">
@@ -241,6 +244,9 @@ export function LandingPage() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex justify-center text-xs hover:text-blue-900"
+            onClick={() => {
+              playGeneralClick()
+            }}
           >
             View transaction
           </a>
@@ -273,7 +279,12 @@ export function LandingPage() {
                   pre-designed. This makes each solar system fully unique.
                 </li>
                 <li>
-                  <a href={`${etherscanBaseURL}/address/${deployments.contracts.Renderer.address}`}>
+                  <a
+                    href={`${etherscanBaseURL}/address/${deployments.contracts.Renderer.address}`}
+                    onClick={() => {
+                      playGeneralClick()
+                    }}
+                  >
                     <span className="text-gray-500 font-bold underline hover:text-blue-900">Fully on-chain</span>
                   </a>
                   . This means that your NFT will exist for as long as the Ethereum blockchain is around.
@@ -332,6 +343,9 @@ export function LandingPage() {
             href="https://twitter.com/npm_luko"
             className="font-bold text-blue-500 hover:text-blue-800"
             target="_blank"
+            onClick={() => {
+              playGeneralClick()
+            }}
           >
             @npm_luko
           </a>{" "}
@@ -340,6 +354,9 @@ export function LandingPage() {
             href="https://twitter.com/stephancill"
             className="font-bold text-blue-500 hover:text-blue-800"
             target="_blank"
+            onClick={() => {
+              playGeneralClick()
+            }}
           >
             @stephancill
           </a>
