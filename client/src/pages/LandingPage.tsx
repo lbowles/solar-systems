@@ -250,47 +250,51 @@ export function LandingPage() {
         </div>
       )}
       {mintTx && mintTx.status && (
-        <div className="flex justify-center alignw-screen mt-1 z-1 pl-10 pr-10 z-10 relative -mb-5 h-4">
-          <div>
-            <a
-              href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
-                mintTx.transactionHash
-              }`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex justify-center text-xs hover:text-blue-900"
-              onClick={() => {
-                playGeneralClick()
-              }}
-            >
-              View transaction
-            </a>
+        <div className="-mb-[62px] h-[50px]">
+          <div className="flex justify-center alignw-screen mt-3 z-1 pl-10 pr-10 z-10 relative  h-4">
+            <div>
+              <a
+                href={`https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io/tx/${
+                  mintTx.transactionHash
+                }`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex justify-center text-xs hover:text-blue-900"
+                onClick={() => {
+                  playGeneralClick()
+                }}
+              >
+                View transaction
+              </a>
+            </div>
           </div>
-
-          <div>
-            Minted tokens:[{" "}
-            {mintedTokens.map((tokenId) => {
-              return (
-                <span>
-                  <a
-                    href={getOpenSeaLink(tokenId)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs hover:text-blue-900"
-                    onClick={() => {
-                      playGeneralClick()
-                    }}
-                  >
-                    {tokenId}
-                  </a>
-                  &nbsp;
-                </span>
-              )
-            })}{" "}
-            ]
+          <div className="flex justify-center alignw-screen mt-2 z-1 pl-10 pr-10 z-10 relative h-4">
+            <div className="text-xs">
+              Minted tokens:[{" "}
+              {mintedTokens.map((tokenId) => {
+                return (
+                  <span>
+                    <a
+                      href={getOpenSeaLink(tokenId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className=" hover:text-blue-900"
+                      onClick={() => {
+                        playGeneralClick()
+                      }}
+                    >
+                      {tokenId}
+                    </a>
+                    &nbsp;
+                  </span>
+                )
+              })}{" "}
+              ]
+            </div>
           </div>
         </div>
       )}
+
       <div className="flex justify-center alignw-screen mt-28 z-1 pl-10 pr-10 z-10 relative">
         <p className="font-bold">Fully on-chain, procedurally generated, animated solar systems.</p>
       </div>
