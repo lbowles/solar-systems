@@ -33,6 +33,14 @@ contract SolarSystems is ERC721A, Ownable {
   }
 
   /**
+   * @notice Sets the price of each solar system in wei.
+   * @param _price Price of each solar system in wei.
+   */
+  function setPrice(uint256 _price) external onlyOwner {
+    price = _price;
+  }
+
+  /**
    * @notice Returns the token URI for a given token ID.
    * @param tokenId ID of the token to get the URI for.
    * @return Token URI.

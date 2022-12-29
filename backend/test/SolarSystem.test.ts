@@ -94,4 +94,25 @@ describe("SolarSystems", function () {
       "Ownable: caller is not the owner",
     )
   })
+
+  it("Should set the price correctly", async function () {
+    // Get current price
+    const currentPrice = await solarSystems.price()
+
+    // Set new price
+    const newPrice = currentPrice.mul(2)
+    await solarSystems.setPrice(newPrice)
+
+    // Check if price has been updated
+    expect(await solarSystems.price()).to.equal(newPrice)
+
+    // Try to mint with old price
+    await expect(solarSystems.mint(1, { value: currentPrice })).to.be.revertedWith("Insufficient fee")
+
+    // Mint with new price
+    await solarSystems.mint(1, { value: newPrice })
+
+    // Check if supply has increased
+    expect(await solarSystems.totalSupply()).to.equal(1)
+  })
 })
