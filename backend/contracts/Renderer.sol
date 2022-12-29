@@ -4,7 +4,7 @@ pragma solidity ^0.8.12;
 import "./Trigonometry.sol";
 import "./Utilities.sol";
 
-library Renderer {
+contract Renderer {
   uint256 constant SIZE = 500;
 
   struct Planet {
@@ -147,7 +147,7 @@ library Renderer {
   * @notice Gets the number of planets in a solar system.
   * @param _tokenId The token ID of the solar system to get the number of planets for.
   */
-  function numPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
+  function numPlanetsForTokenId(uint256 _tokenId) public pure returns (uint256) {
     return utils.randomRange(_tokenId, "numPlanets", 1, 6);
   }
 
@@ -155,7 +155,7 @@ library Renderer {
   * @notice Gets the number of ringed planets in a solar system.
   * @param _tokenId The token ID of the solar system to get the number of ringed planets for.
   */
-  function numRingedPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
+  function numRingedPlanetsForTokenId(uint256 _tokenId) public pure returns (uint256) {
     uint256 numRingedPlanets;
     for (uint256 i = 0; i < numPlanetsForTokenId(_tokenId); i++) {
       if (utils.randomRange(_tokenId, string.concat("ringsOffset", utils.uint2str(i)), 0, 10) == 5) {
@@ -169,7 +169,7 @@ library Renderer {
   * @notice Determines if a solar system has a rare star.
   * @param _tokenId The token ID of the solar system to check.
   */
-  function hasRareStarForTokenId(uint256 _tokenId) internal pure returns (bool) {
+  function hasRareStarForTokenId(uint256 _tokenId) public pure returns (bool) {
     return utils.randomRange(_tokenId, "rareStar", 0, 10) == 5;
   }
 

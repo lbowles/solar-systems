@@ -31,6 +31,11 @@ const solarSystemsConfig = {
   abi: deployments.contracts.SolarSystems.abi,
 }
 
+const rendererConfig = {
+  address: deployments.contracts.Renderer.address,
+  abi: deployments.contracts.Renderer.abi,
+}
+
 const etherscanBaseURL = `https://${process.env.NODE_ENV === "development" ? "goerli." : ""}etherscan.io`
 
 function getOpenSeaLink(tokenId: string | number) {
@@ -72,6 +77,15 @@ export function LandingPage() {
     if (mintCount > 1) setPlaybackRate(playbackRate - 0.4)
     playSmallClick()
   }
+
+  const [randomTokenId, setRandomTokenId] = useState<number>(Math.round(Math.random() * 10000) + 1001)
+
+  const { data: sampleSvg, isLoading: sampleSvgLoading } = useContractRead({
+    ...rendererConfig,
+    functionName: "render",
+    // Random number
+    args: [BigNumber.from(`${randomTokenId}`)],
+  })
 
   const {
     data: mintPrice,

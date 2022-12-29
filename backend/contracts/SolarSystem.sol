@@ -11,6 +11,7 @@ import "svgnft/contracts/Base64.sol";
 contract SolarSystems is ERC721A, Ownable {
   uint256 public price;
   uint256 public maxSupply;
+  Renderer public renderer;
 
   /**
    * @dev Constructs a new instance of the contract.
@@ -23,10 +24,12 @@ contract SolarSystems is ERC721A, Ownable {
     string memory _name,
     string memory _symbol,
     uint256 _price,
-    uint256 _maxSupply
+    uint256 _maxSupply,
+    address _renderer
   ) ERC721A(_name, _symbol) {
     price = _price;
     maxSupply = _maxSupply;
+    renderer = Renderer(_renderer);
   }
 
   /**
@@ -35,9 +38,11 @@ contract SolarSystems is ERC721A, Ownable {
    * @return Token URI.
    */
   function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+    if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
+
     string memory name = string(abi.encodePacked("Solar System #", utils.uint2str(tokenId)));
     string memory description = "Fully on-chain, procedurally generated, animated solar systems.";
-    string memory svg = Renderer.getSVG(tokenId);
+    string memory svg = renderer.getSVG(tokenId);
 
     string memory json = string(
       abi.encodePacked(
@@ -46,11 +51,11 @@ contract SolarSystems is ERC721A, Ownable {
         '","description":"',
         description,
         '","attributes":[{"trait_type":"Planets","value":"',
-        utils.uint2str(Renderer.numPlanetsForTokenId(tokenId)),
+        utils.uint2str(renderer.numPlanetsForTokenId(tokenId)),
         '"}, {"trait_type":"Ringed Planets", "value": "',
-        utils.uint2str(Renderer.numRingedPlanetsForTokenId(tokenId)),
+        utils.uint2str(renderer.numRingedPlanetsForTokenId(tokenId)),
         '"}, {"trait_type":"Star Type", "value": "',
-        Renderer.hasRareStarForTokenId(tokenId) ? "Blue" : "Normal",
+        renderer.hasRareStarForTokenId(tokenId) ? "Blue" : "Normal",
         '"}], "image": "data:image/svg+xml;base64,',
         Base64.encode(bytes(svg)),
         '"}'
@@ -86,5 +91,9 @@ contract SolarSystems is ERC721A, Ownable {
    */
   function withdraw() external onlyOwner {
     require(payable(msg.sender).send(address(this).balance));
+  }
+
+  function _startTokenId() internal view virtual override returns (uint256) {
+    return 1;
   }
 }
