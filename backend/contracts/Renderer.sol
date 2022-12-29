@@ -38,6 +38,11 @@ library Renderer {
     return (newX, newY);
   }
 
+
+  /**
+  * @notice Gets the SVG representation of a planet's orbit.
+  * @param planet The planet to generate the SVG for.
+  */
   function getOrbitSVG(Planet memory planet) public pure returns (string memory) {
     uint256 halfCanvasWidth = SIZE / 2;
 
@@ -138,10 +143,18 @@ library Renderer {
     return renderedSVG;
   }
 
+  /**
+  * @notice Gets the number of planets in a solar system.
+  * @param _tokenId The token ID of the solar system to get the number of planets for.
+  */
   function numPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     return utils.randomRange(_tokenId, "numPlanets", 1, 6);
   }
 
+  /**
+  * @notice Gets the number of ringed planets in a solar system.
+  * @param _tokenId The token ID of the solar system to get the number of ringed planets for.
+  */
   function numRingedPlanetsForTokenId(uint256 _tokenId) internal pure returns (uint256) {
     uint256 numRingedPlanets;
     for (uint256 i = 0; i < numPlanetsForTokenId(_tokenId); i++) {
@@ -152,10 +165,18 @@ library Renderer {
     return numRingedPlanets;
   }
 
+  /**
+  * @notice Determines if a solar system has a rare star.
+  * @param _tokenId The token ID of the solar system to check.
+  */
   function hasRareStarForTokenId(uint256 _tokenId) internal pure returns (bool) {
     return utils.randomRange(_tokenId, "rareStar", 0, 10) == 5;
   }
 
+  /**
+  * @notice Gets the SVG representation of a solar system.
+  * @param _tokenId The token ID of the solar system to generate the SVG for.
+  */
   function getSVG(uint256 _tokenId) public pure returns (string memory) {
     uint256 numPlanets = numPlanetsForTokenId(_tokenId);
     uint256 radiusInterval = SIZE / 2 / (numPlanets + 3);
