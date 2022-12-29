@@ -259,6 +259,9 @@ export function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex justify-center text-xs hover:text-blue-900"
+              onClick={() => {
+                playGeneralClick()
+              }}
             >
               View transaction
             </a>
@@ -274,6 +277,9 @@ export function LandingPage() {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-xs hover:text-blue-900"
+                    onClick={() => {
+                      playGeneralClick()
+                    }}
                   >
                     {tokenId}
                   </a>
@@ -333,7 +339,6 @@ export function LandingPage() {
             <div className="flex justify-center items-center ">
               <div className=" grid  grid-flow-col gap-3">
                 {/* TODO: Add OpenSea */}
-
                 <a
                   className="hover:scale-110 duration-100 ease-in-out"
                   onClick={() => {
