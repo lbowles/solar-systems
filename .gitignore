@@ -6,3 +6,4 @@ node_modules
 .DS_Store
 .article.md
 .env
+backend/analytics/transactions.csv
