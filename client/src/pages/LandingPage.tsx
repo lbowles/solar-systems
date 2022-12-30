@@ -5,6 +5,7 @@ import background from ".././img/background.svg"
 import loading from ".././img/loading.svg"
 import opensea from ".././img/opensea.svg"
 import github from ".././img/github.svg"
+import twitter from ".././img/twitter.svg"
 import etherscan from ".././img/etherscan.svg"
 import demoSolarSystem from ".././img/demoSolarSystem.svg"
 import { ConnectButton, useAddRecentTransaction } from "@rainbow-me/rainbowkit"
@@ -367,6 +368,17 @@ export function LandingPage() {
                   }}
                 >
                   <img src={github} alt="github" />
+                </a>
+                <a
+                  href="https://twitter.com/SolarSystemsNFT"
+                  className="hover:scale-110 duration-100 ease-in-out"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    playGeneralClick()
+                  }}
+                >
+                  <img src={twitter} alt="twitter" />
                 </a>
               </div>
             </div>
